@@ -1,0 +1,38 @@
+{
+    "server": {
+        "port": 80
+    },
+    "release": {
+        "project": "fepack-test",
+        "domain": "//s1.mljr.com",
+
+        "cases" : {
+            "dev": {
+                "optimize": false,
+                "version": false,
+                "watch": false,
+                "domain": false,
+                "env": {
+                    "aa": "aaaa",
+                    "bb": "bbbb",
+                    "a": "cc"
+                }
+            },
+            "qa": {
+                "optimize": true,
+                "version": true,
+                "watch": false,
+                "domain": true
+            }
+        },
+
+        "copy": [
+            "copy/**/*"
+        ],
+
+        "ignore": [
+            "fepack.json",
+            "ignore/**/*"
+        ]
+    }
+}

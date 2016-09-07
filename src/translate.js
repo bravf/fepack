@@ -1,0 +1,111 @@
+let path = require('path')
+let fs = require('fs')
+let exec = require('child_process').exec
+let colors = require('colors')
+let deepAssign = require('deep-assign')
+var markdown = require('markdown').markdown
+let util = require('./util')
+
+let g_conf = global.g_conf
+let tmpDir = g_conf.tmpDir
+let releaseConf = g_conf.fepackJSON.release
+
+let isWatch = g_conf.case.watch
+
+function tsc(){
+    let defer = Promise.defer()
+    let tsconf = path.join(tmpDir.a, 'tsconfig.json')
+
+    util.createF(tsconf, `
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "rootDir": ".",
+        "outDir": "../b",
+        "allowJs": true
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "./**/*.js"
+    ],
+    "atom": {
+        "rewriteTsconfig": false
+    }
+}
+`)
+
+    let tscProcess = exec('tsc -w')
+    tscProcess.stdout.on('data', msg=>{
+        if (msg.indexOf('Watching for file changes') != -1){
+            defer.resolve()
+
+            if (!isWatch){
+                tscProcess.kill()
+            }
+            return
+        }
+        if (msg.indexOf('error') != -1){
+            util.error(msg)
+            return
+        }
+
+        util.log(msg)
+    })
+    tscProcess.stderr.on('data', msg=>{
+        util.error(msg)
+    })
+
+    return defer.promise
+}
+
+function sassc(){
+    let defer = Promise.defer()
+    let sassconf = path.join(tmpDir.a, 'config.rb')
+
+    util.createF(sassconf, `
+require "compass/import-once/activate"
+
+http_path = "/"
+css_dir = "../b"
+sass_dir = ""
+images_dir = ""
+`
+    )
+
+    let sassProcess = exec('compass compile')
+    sassProcess.stdout.on('data', msg=>{
+        util.log(msg)
+    })
+    .on('end', msg=>{
+        defer.resolve()
+    })
+    sassProcess.stderr.on('data', msg=>{
+        util.error(msg)
+    })
+
+    return defer.promise
+}
+
+function jadec(){
+
+}
+
+function mdc(){
+    util.walk(tmpDir.a, f => {
+        if (path.extname(f) != '.md'){
+            return
+        }
+        let body = markdown.toHTML(util.getBody(f))
+        let f2 = path.join(tmpDir.b, path.relative(tmpDir.a, f).replace(/\.md/, '.html'))
+        util.createF(f2, body)
+    })
+}
+
+function translate(){
+    process.chdir(tmpDir.a)
+    tsc()
+    sassc()
+    mdc()
+}
+
+exports.translate = translate

@@ -1,0 +1,16 @@
+
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "rootDir": ".",
+        "outDir": "../b",
+        "allowJs": true
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "./**/*.js"
+    ],
+    "atom": {
+        "rewriteTsconfig": false
+    }
+}
