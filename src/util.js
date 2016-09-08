@@ -112,8 +112,8 @@ util.replaceEnv = function (env, body){
         return body
     }
 
-    return body.replace(/(?:@FEDOG\.(\w+)|@\{FEDOG\.(\w+)\})/g, (a, b, c)=>{
-        b = b || c
+    return body.replace(/(?:@FEDOG\.(\w+)|@\{FEDOG\.(\w+)\}|@FEPACK\.(\w+)|@\{FEPACK\.(\w+)\})/g, (a, b, c, d, e)=>{
+        b = b || c || d || e
         if (b in env){
             return env[b]
         }
@@ -121,6 +121,15 @@ util.replaceEnv = function (env, body){
             return ''
         }
     })
+}
+
+//是否下划线开头
+util.underline = function (f){
+    return path.basename(f)[0] == '_'
+}
+
+util.isext = function (f, exts){
+    return exts.split(',').indexOf(path.extname(f)) != -1
 }
 
 module.exports = util

@@ -5,6 +5,7 @@ let colors = require('colors')
 let deepAssign = require('deep-assign')
 var markdown = require('markdown').markdown
 let util = require('./util')
+let transJade = require('./transJade')
 
 let g_conf = global.g_conf
 let tmpDir = g_conf.tmpDir
@@ -12,7 +13,8 @@ let releaseConf = g_conf.fepackJSON.release
 
 let isWatch = g_conf.case.watch
 
-function tsc(){
+//* typescript 转换
+function transts(){
     let defer = Promise.defer()
     let tsconf = path.join(tmpDir.a, 'tsconfig.json')
 
@@ -58,7 +60,8 @@ function tsc(){
     return defer.promise
 }
 
-function sassc(){
+//* sass 转换
+function transsass(){
     let defer = Promise.defer()
     let sassconf = path.join(tmpDir.a, 'config.rb')
 
@@ -86,26 +89,65 @@ images_dir = ""
     return defer.promise
 }
 
-function jadec(){
-
+function sassWatch(){
+    let sassProcess = exec('compass watch')
+    sassProcess.stdout.on('data', msg=>{
+        util.log(msg)
+    })
+    sassProcess.stderr.on('data', msg=>{
+        util.error(msg)
+    })
 }
 
-function mdc(){
+//# markdown 转换
+function isMD(f){
+    return path.extname(f) == '.md'
+}
+
+function mdc(f){
+    if (!fs.existsSync(f) || !isMD(f)){
+        return
+    }
+    let rf = path.relative(tmpDir.a, f)
+
+    util.log(`[translate]: ${rf}`)
+
+    let body = markdown.toHTML(util.getBody(f))
+    let f2 = path.join(tmpDir.b, rf.replace(/\.md/, '.html'))
+    util.createF(f2, body)
+}
+
+function transmd(){
     util.walk(tmpDir.a, f => {
         if (path.extname(f) != '.md'){
             return
         }
-        let body = markdown.toHTML(util.getBody(f))
-        let f2 = path.join(tmpDir.b, path.relative(tmpDir.a, f).replace(/\.md/, '.html'))
-        util.createF(f2, body)
+        mdc(f)
     })
 }
 
+function mdWatch(){
+    fs.watch(tmpDir.a, {recursive:true}, (e, f)=>{
+        mdc(path.join(tmpDir.a, f))
+    })
+}
+
+//* 整体转换
 function translate(){
     process.chdir(tmpDir.a)
-    tsc()
-    sassc()
-    mdc()
+
+    transJade.translate()
+    transmd()
+
+    return transts().then(_=>{
+        return transsass()
+    })
+}
+function watch(){
+    transJade.watch()
+    mdWatch()
+    sassWatch()
 }
 
 exports.translate = translate
+exports.watch = watch

@@ -9,9 +9,9 @@
         "cases" : {
             "dev": {
                 "optimize": false,
-                "version": false,
-                "watch": false,
-                "domain": false,
+                "version": true,
+                "watch": true,
+                "domain": true,
                 "env": {
                     "aa": "aaaa",
                     "bb": "bbbb",

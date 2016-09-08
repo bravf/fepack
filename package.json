@@ -1,6 +1,6 @@
 {
   "name": "fepack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a easy web tool",
   "main": "index.js",
   "scripts": {
@@ -27,5 +27,8 @@
     "markdown": "^0.5.0",
     "minimatch": "^3.0.3",
     "uglify-js": "^2.7.3"
+  },
+  "bin": {
+      "fepack": "./bin/fepack"
   }
 }

@@ -10,15 +10,30 @@ let tmpDir = g_conf.tmpDir
 let releaseConf = g_conf.fepackJSON.release
 
 function filterFile(f){
+    if (!fs.existsSync(f)){
+        return
+    }
+
     let rf = path.relative(g_conf.root, f)
+
+    util.log(`[filter]: ${rf}`)
 
     if (util.match(releaseConf.ignore, rf)){
         return false
     }
     if (util.match(releaseConf.copy, rf)){
-        return util.copy(f, path.join(tmpDir.f, rf))
+        return util.copy(f, path.join(tmpDir.c, rf))
     }
-    return util.copy(f, path.join(tmpDir.a, rf))
+
+    //参与语法降级的到a，其他全部到b
+    let extname = path.extname(f)
+
+    if (util.isext(f, '.ts,.scss,.md,.jade')){
+        return util.copy(f, path.join(tmpDir.a, rf))
+    }
+    else {
+        return util.copy(f, path.join(tmpDir.b, rf))
+    }
 }
 
 function filter(){
@@ -30,4 +45,13 @@ function filter(){
     return Promise.all(ps)
 }
 
+function watch(){
+    fs.watch(g_conf.root, {recursive:true}, (e, f) => {
+        if ( (f.slice(0, 13) != '__fepack-tmp/') ){
+            filterFile(path.join(g_conf.root, f))
+        }
+    })
+}
+
 exports.filter = filter
+exports.watch = watch

@@ -13,7 +13,12 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('1.0.0')
+        .version('1.0.1')
+        .option('server [s]', 'a static server', _=>{
+            initConfig()
+            let server = require('./src/server/server')
+            server[_]()
+        })
         .option('release [r]', 'release project', _=>{
             program.releaseCase = _
             initConfig()
@@ -42,8 +47,12 @@ function initConfig(){
     //* 读取fepack配置文件
     let fepackFile = path.join(root, 'fepack.json')
     if (!fs.existsSync(fepackFile)){
-        util.error(`Can not find "fepack.json", please check!`)
-        process.exit()
+        // 兼容fedog
+        fepackFile = path.join(root, 'fedog.json')
+        if (!fs.existsSync(fepackFile)){
+            util.error(`Can not find "fepack.json", please check!`)
+            process.exit()
+        }
     }
 
     let fepackJSON = JSON.parse(util.getBody(fepackFile))
@@ -71,6 +80,9 @@ function initConfig(){
         g_conf.case.www = path.join(root, g_conf.case.www)
     }
 
+    //在环境变量中增加html版本号
+    g_conf.case.env['htmlVersion'] =  +new Date
+
     //* 设置cmd title
     process.stdout.write(`${String.fromCharCode(27)}]0;FEPACK [${g_conf.fepackJSON.release.project}]${String.fromCharCode(7)}`)
 }
@@ -84,16 +96,50 @@ function cleanTmpDir(){
 }
 
 function factory(){
+    let gCase = g_conf.case
+    let filter = require('./src/filter')
+    let translate = require('./src/translate')
+    let jsRequire = require('./src/jsRequire')
+    let optimize = require('./src/optimize')
+    let version = require('./src/version')
+
     cleanTmpDir()
         .then(_ => {
-            return require('./src/filter').filter()
+            return filter.filter()
         })
         .then(_ => {
-            return require('./src/translate').translate()
+            return translate.translate()
+        })
+        .then(_ => {
+            return jsRequire.jsRequire()
+        })
+        .then(_ => {
+            if (gCase.optimize){
+                return optimize.optimize()
+            }
+        })
+        .then(_ => {
+            if (gCase.version){
+                return version.version()
+            }
+        })
+        .then(_ => {
+            if (gCase.watch){
+                filter.watch()
+                translate.watch()
+                jsRequire.watch()
+
+                if (gCase.optimize){
+                    optimize.watch()
+                }
+                if (gCase.version){
+                    version.watch()
+                }
+            }
         })
         .catch(msg => {
             util.error(msg)
         })
 }
 
-main()
+exports.main = main
