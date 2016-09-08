@@ -36,6 +36,11 @@ function idtable(a, b){
 //f1当前文件，f2引用文件
 function gPath(f1, f2){
     let f3
+
+    if (f2.slice(0,4) == 'http'){
+        return false
+    }
+
     if (f2[0] == '/'){
         f3 = path.join(fromDir, f2)
     }
@@ -68,7 +73,8 @@ function v(t){
 //替换引用辅助函数
 function vf(f, a, b){
     let bf = gPath(f, b)
-    if (fs.existsSync(bf)){
+
+    if (bf !== false){
         idtable(bf, f)
 
         let bo = path.parse(bf)
@@ -78,9 +84,6 @@ function vf(f, a, b){
         let version = gCase.version && vtable[bf] ? `.${vtable[bf]}` : ''
 
         return a.replace(b, domain + project + path.join(bo.dir.replace(fromDir, ''), `${bo.name}${version}${bo.ext}`))
-    }
-    else {
-        return a
     }
 }
 

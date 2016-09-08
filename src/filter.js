@@ -22,7 +22,7 @@ function filterFile(f){
         return false
     }
     if (util.match(releaseConf.copy, rf)){
-        return util.copy(f, path.join(tmpDir.c, rf))
+        return util.copy(f, path.join(g_conf.case.www, releaseConf.project, rf))
     }
 
     //参与语法降级的到a，其他全部到b
