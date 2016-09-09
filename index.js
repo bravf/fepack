@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('1.0.3')
+        .version('1.0.4')
         .option('server [s]', 'a static server', _=>{
             initConfig()
             let server = require('./src/server/server')
@@ -81,7 +81,7 @@ function initConfig(){
     }
 
     //在环境变量中增加html版本号
-    g_conf.case.env['htmlVersion'] =  +new Date
+    g_conf.case.env['htmlVersion'] = g_conf.case.htmlVersion ? +new Date : ''
 
     //* 设置cmd title
     process.stdout.write(`${String.fromCharCode(27)}]0;FEPACK [${g_conf.fepackJSON.release.project}]${String.fromCharCode(7)}`)
