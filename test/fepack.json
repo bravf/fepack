@@ -11,7 +11,7 @@
                 "optimize": false,
                 "version": true,
                 "watch": true,
-                "domain": true,
+                "domain": false,
                 "env": {
                     "aa": "aaaa",
                     "bb": "bbbb",

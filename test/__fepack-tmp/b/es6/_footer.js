@@ -1,3 +1,3 @@
-exports.say = function () {
-    console.log(require('./_footer.tpl'));
-};
+exports.say = function (){
+    console.log(require('./_footer.tpl'))
+}

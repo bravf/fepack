@@ -25,15 +25,23 @@ function filterFile(f){
         return util.copy(f, path.join(g_conf.case.www, releaseConf.project, rf))
     }
 
-    //参与语法降级的到a，其他全部到b
+    // node_modules目录直接到b参与jsRequire
+    // 参与语法降级的到a
+    // 其他全部到b
     let extname = path.extname(f)
+    let toDir
 
-    if (util.isext(f, '.ts,.scss,.md,.jade')){
-        return util.copy(f, path.join(tmpDir.a, rf))
+    if (util.isNodeModulePath(rf)){
+        toDir = tmpDir.b
+    }
+    else if (util.isext(f, '.ts,.scss,.md,.jade')){
+        toDir = tmpDir.a
     }
     else {
-        return util.copy(f, path.join(tmpDir.b, rf))
+        toDir = tmpDir.b
     }
+
+    return util.copy(f, path.join(toDir, rf))
 }
 
 function filter(){

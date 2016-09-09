@@ -15,6 +15,39 @@ let requireReg = /require\(['|"](.*?)['|"]\)/g
 // {'/static/_a.js':['/static/index.js', '/static/index2.js']}
 let depTable = {}
 
+function getRequirePath(currF, requireF){
+    let rf = requireF
+    let f
+
+    // 如果缺省扩展名，默认为.js
+    if (!path.extname(rf)){
+        rf = `${rf}.js`
+    }
+
+    // 如果是jade,md转换为html
+    if (util.isext(rf, '.jade,.md')){
+        rf = rf.replace(/\.jade|.md$/, '.html')
+    }
+
+    // 先找业务文件夹
+    if (rf[0] == '/'){
+        f = path.join(tmpDir.b, rf)
+    }
+    else {
+        f = path.join(path.dirname(currF), rf)
+    }
+
+    if (!fs.existsSync(f)){
+        // 尝试查找node_modules
+        f = path.join(tmpDir.b, 'node_modules', requireF, 'index.js')
+        if (!fs.existsSync(f)){
+            return ''
+        }
+    }
+
+    return f
+}
+
 //* 扫描当前js文件所有require的模块
 function scanJs(mainF, currF, requireFiles){
     let body = util.getBody(currF)
@@ -27,27 +60,11 @@ function scanJs(mainF, currF, requireFiles){
     }
 
     for (let i=0; i<arr.length; i++){
-        let rf = arr[i]
-        let f
-
-        // 如果缺省扩展名，默认为.js
-        if (!path.extname(rf)){
-            rf = `${rf}.js`
-        }
-
-        // 先找业务文件夹
-        if (rf[0] == '/'){
-            f = path.join(tmpDir.b, rf)
-        }
-        else {
-            f = path.join(path.dirname(currF), rf)
-        }
-
-        if (!fs.existsSync(f)){
-            util.error(`Can not find ${rf}!`)
+        let f = getRequirePath(currF, arr[i])
+        if (!f){
+            util.error(`Can not find "${arr[i]}"!`)
             continue
         }
-
         scanJs(mainF, f, requireFiles)
     }
 
@@ -66,7 +83,7 @@ function getBody(f){
     let body2
 
     // 如果tpl
-    if (util.isext(f, '.tpl')){
+    if (util.isext(f, '.tpl,.html')){
         body2 = `${winFuncName} = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}'`
     }
     else if (util.isext(f, '.js')){
@@ -79,8 +96,7 @@ void function (module, exports){
     }
 
     body2 = body2.replace(requireReg, (a, b)=>{
-        b = path.extname(b) ? b : `${b}.js`
-        let requirePath = b[0] == '/' ?  b : path.relative(tmpDir.b, path.join(path.dirname(f), b))
+        let requirePath = path.relative(tmpDir.b, getRequirePath(f, b))
         return `window["${requirePath}"]`
     })
 
@@ -101,7 +117,7 @@ function createBundleJs(f, requireFiles){
 }
 
 function compileJs(f){
-    if (!fs.existsSync(f)){
+    if (!fs.existsSync(f) || util.isNodeModulePath(f)){
         return
     }
 
@@ -127,11 +143,13 @@ function jsRequire(){
     let ps = []
     util.walk(tmpDir.b, f => {
         if (!util.underline(f)){
-            if (util.isext(f, '.js,.tpl')){
+            if (util.isext(f, '.js')){
                 compileJs(f)
             }
             else {
-                ps.push(util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f))))
+                if (!util.isNodeModulePath(f)){
+                    ps.push(util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f))))
+                }
             }
         }
     })
@@ -142,7 +160,7 @@ function watch(){
     fs.watch(tmpDir.b, {recursive:true}, (e, rf) => {
         let f = path.join(tmpDir.b, rf)
 
-        if (util.isext(f, '.js,.tpl')){
+        if (util.isext(f, '.js,.tpl,.jade,.html')){
             if (f in depTable){
                 depTable[f].forEach(_=>{
                     compileJs(_)
@@ -152,10 +170,9 @@ function watch(){
                 compileJs(f)
             }
         }
-        else {
-            if (!util.underline(f)){
-                util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
-            }
+
+        if (!util.underline(f) && !util.isNodeModulePath(f) && !util.isext(f, '.js')){
+            util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
         }
     })
 }

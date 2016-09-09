@@ -132,4 +132,8 @@ util.isext = function (f, exts){
     return exts.split(',').indexOf(path.extname(f)) != -1
 }
 
+util.isNodeModulePath = function (f){
+    return f.indexOf('node_modules/') != -1
+}
+
 module.exports = util
