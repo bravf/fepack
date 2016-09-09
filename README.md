@@ -1,5 +1,7 @@
 # fepack
 
+---
+
 fepack是面向前端的工程构建工具。解决前端工程中资源加载、模块化开发、自动化工具、代码部署等问题。
 
 ```
@@ -21,9 +23,25 @@ fepack server start
 
 在浏览器中打开127.0.0.1:8080
 ```
-
-###fepack.json
+##模块加载
+###fepack支持browserify式的模块加载
 ```js
+// require业务js文件
+let head = require('./head.js')
+
+// require 4种格式模板文件
+let headTemplate = require('./head.tpl')
+require('./head.html')
+require('./head.jade')
+require('./head.md')
+
+// require npm安装的node包（不支持依赖native环境的包）
+// 在项目根目录npm install --save cookie
+let cookie = require('cookie')
+```
+
+##fepack.json
+```
 {
     "server": {
 
@@ -90,6 +108,7 @@ fepack server start
     }
 }
 ```
+
 
 
 
