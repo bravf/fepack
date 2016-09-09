@@ -52,7 +52,7 @@ let cookie = require('cookie')
 ```
 
 ##fepack.json
-```
+```js
 {
     "server": {
 
