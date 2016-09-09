@@ -1,7 +1,5 @@
 # fepack
 
----
-
 fepack是面向前端的工程构建工具。解决前端工程中资源加载、模块化开发、自动化工具、代码部署等问题。
 
 ```
@@ -13,7 +11,7 @@ gem install compass
 npm install -g fepack
 ```
 
-###例子
+##例子
 ```
 mkdir my-proj
 cd my-proj
@@ -23,6 +21,19 @@ fepack server start
 
 在浏览器中打开127.0.0.1:8080
 ```
+
+##支持功能
+```
+1、语法增强，支持
+    (typescript,es6) => es5
+    sass => css
+    (jade,md) => html
+    
+2、静态资源加版本号
+3、文件压缩
+4、源文件常量注入
+```
+
 ##模块加载
 ###fepack支持browserify式的模块加载
 ```js
