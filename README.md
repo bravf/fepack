@@ -111,10 +111,7 @@ let cookie = require('cookie')
         // 设置文件忽略
         "ignore": [
             "static/script/ignore/**/*",
-            "config.rb",
-            "fedog.json",
-            "tsconfig.json",
-            "run.py"
+            "fepack.json"
         ]
     }
 }
