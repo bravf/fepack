@@ -8,10 +8,15 @@ let colors = require('colors')
 let util = {}
 
 util.log = function (msg){
-    console.log(msg)
+    console.log(`[${util.logTime()}]${msg}`)
 }
 util.error = function (msg){
-    console.log(colors.red(msg))
+    console.log(colors.red(`[${util.logTime()}]${msg}`))
+}
+
+util.logTime = function (){
+    let now = new Date
+    return `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
 }
 
 //深度遍历文件夹

@@ -80,10 +80,10 @@ function vf(f, a, b){
         let bo = path.parse(bf)
 
         let domain = gCase.domain ? releaseConf.domain : ''
-        let project = releaseConf.project ? '/' + releaseConf.project : ''
+        let project = releaseConf.project ? releaseConf.project : ''
         let version = gCase.version && vtable[bf] ? `.${vtable[bf]}` : ''
 
-        return a.replace(b, domain + project + path.join(bo.dir.replace(fromDir, ''), `${bo.name}${version}${bo.ext}`))
+        return a.replace(b, domain + '/' + path.join(project, bo.dir.replace(fromDir, ''), `${bo.name}${version}${bo.ext}`))
     }
 }
 

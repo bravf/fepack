@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('1.0.4')
+        .version('1.0.5')
         .option('server [s]', 'a static server', _=>{
             initConfig()
             let server = require('./src/server/server')
@@ -119,9 +119,7 @@ function factory(){
             }
         })
         .then(_ => {
-            if (gCase.version){
                 return version.version()
-            }
         })
         .then(_ => {
             if (gCase.watch){
@@ -132,9 +130,7 @@ function factory(){
                 if (gCase.optimize){
                     optimize.watch()
                 }
-                if (gCase.version){
-                    version.watch()
-                }
+                version.watch()
             }
         })
         .catch(msg => {
