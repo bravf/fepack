@@ -15,7 +15,8 @@ npm install -g fepack
 ```
 mkdir my-proj
 cd my-proj
-touch fepack.json // fepack.json配置看后文介绍
+
+fepack init // 生成fepack.json，配置看后文介绍
 fepack release dev
 fepack server start
 
@@ -28,7 +29,7 @@ fepack server start
     (typescript,es6) => es5
     sass => css
     (jade,md) => html
-    
+
 2、静态资源加版本号
 3、文件压缩
 4、源文件常量注入
@@ -66,7 +67,7 @@ let cookie = require('cookie')
 
         //域名，会加到被引用的资源前
         "domain": "",
-        
+
         //编译实例
         "cases": {
             "dev": {
@@ -116,7 +117,3 @@ let cookie = require('cookie')
     }
 }
 ```
-
-
-
-
