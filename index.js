@@ -13,7 +13,10 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('1.0.6')
+        .version('1.0.7')
+        .option('init', 'create fepack.json', _=>{
+            createConfig()
+        })
         .option('server [s]', 'a static server', _=>{
             initConfig()
             let server = require('./src/server/server')
@@ -25,6 +28,57 @@ function main(){
             factory()
         })
         .parse(process.argv)
+}
+
+function createConfig(){
+    let root = process.cwd()
+    let conf1 = path.join(root, 'fepack.json')
+    let conf2 = path.join(root, 'fedog.json')
+
+    if (!fs.existsSync(conf1) && !fs.existsSync(conf2)){
+        util.createF(conf1,
+`{
+    "server": {
+        "port": 8080
+    },
+    "release": {
+        "project": "",
+        "domain": "",
+
+        "cases": {
+            "dev": {
+                "watch": true,
+                "version": false,
+                "optimize": false,
+                "env": {
+                    "ENV": "LOCAL"
+                }
+            },
+            "qa": {
+                "watch": false,
+                "version": false,
+                "optimize": false
+            },
+            "www": {
+                "watch": false,
+                "version": true,
+                "optimize": true
+            }
+        },
+
+        "copy": [
+            "**/*.min.js",
+            "**/*.min.css"
+        ],
+        "ignore": [
+            "fepack.json"
+        ]
+    }
+}`
+        )
+
+        util.log('fepack.json创建成功!')
+    }
 }
 
 function initConfig(){
