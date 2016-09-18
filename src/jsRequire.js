@@ -167,7 +167,9 @@ function watch(){
                 })
             }
             else {
-                compileJs(f)
+                if (util.isext(f, '.js')){
+                    compileJs(f)
+                }
             }
         }
 

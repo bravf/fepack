@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('1.0.5')
+        .version('1.0.6')
         .option('server [s]', 'a static server', _=>{
             initConfig()
             let server = require('./src/server/server')
