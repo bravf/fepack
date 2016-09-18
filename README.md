@@ -1,4 +1,6 @@
-# fepack
+# fepack 
+
+[![Version](http://img.shields.io/npm/v/fepack.svg)](https://www.npmjs.org/package/fepack)
 
 fepack是面向前端的工程构建工具。解决前端工程中资源加载、模块化开发、自动化工具、代码部署等问题。
 
