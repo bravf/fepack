@@ -89,7 +89,7 @@ function vf(f, a, b){
 
 //处理非html,css文件
 function v1(f){
-    util.log(`[version]: ${path.relative(fromDir, f)}`)
+    util.log(`[path]: ${path.relative(fromDir, f)}`)
 
     let fo = path.parse(f)
     let f2 = path.join(toDir, path.relative(fromDir, f))
@@ -106,7 +106,7 @@ function v1(f){
 }
 //处理js,css文件
 function v2(f){
-    util.log(`[version]: ${path.relative(fromDir, f)}`)
+    util.log(`[path]: ${path.relative(fromDir, f)}`)
 
     let fo = path.parse(f)
     let f2 = path.join(toDir, path.relative(fromDir, f))
@@ -133,7 +133,7 @@ function v2(f){
 }
 //处理html文件
 function v3(f){
-    util.log(`[version]: ${path.relative(fromDir, f)}`)
+    util.log(`[path]: ${path.relative(fromDir, f)}`)
 
     let fo = path.parse(f)
     let rf = path.relative(fromDir, f)
