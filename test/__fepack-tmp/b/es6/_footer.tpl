@@ -1,1 +1,0 @@
-this is footer tpl!!!--

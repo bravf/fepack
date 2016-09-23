@@ -13,3 +13,5 @@ require('hehe')
 
 console.log(require('../markdown/1.md'))
 console.log(require('../jade/index.jade'))
+
+console.log(require('../sass/jsRequire.css'))

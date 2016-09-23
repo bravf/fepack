@@ -86,6 +86,16 @@ function getBody(f){
     if (util.isext(f, '.tpl,.html')){
         body2 = `${winFuncName} = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}'`
     }
+    else if (util.isext(f, '.css')){
+        body2 = `
+void function (){
+    let style = document.createElement('style')
+    style.type = 'text/css'
+    style.innerHTML = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}'
+    document.getElementsByTagName('head')[0].appendChild(style)
+}();
+        `
+    }
     else if (util.isext(f, '.js')){
         body2 = `
 void function (module, exports){
@@ -160,7 +170,7 @@ function watch(){
     fs.watch(tmpDir.b, {recursive:true}, (e, rf) => {
         let f = path.join(tmpDir.b, rf)
 
-        if (util.isext(f, '.js,.tpl,.jade,.html')){
+        if (util.isext(f, '.js,.tpl,.jade,.html,.css')){
             if (f in depTable){
                 depTable[f].forEach(_=>{
                     compileJs(_)
