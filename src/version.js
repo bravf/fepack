@@ -85,6 +85,9 @@ function vf(f, a, b){
 
         return a.replace(b, domain + '/' + path.join(project, bo.dir.replace(fromDir, ''), `${bo.name}${version}${bo.ext}`))
     }
+    else {
+        return a
+    }
 }
 
 //处理非html,css文件
