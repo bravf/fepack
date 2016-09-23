@@ -42,6 +42,11 @@ util.getBody = function (f){
     return fs.readFileSync(f).toString()
 }
 
+//得到文件大小
+util.getFileSize = function (f){
+    return fs.statSync(f).size
+}
+
 //或者内容md5后8位
 util.getMd5 = function (body){
     let md5 = crypto.createHash('md5')

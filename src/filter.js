@@ -16,6 +16,13 @@ function filterFile(f){
 
     let rf = path.relative(g_conf.root, f)
 
+    // check file size
+    // 如果大于200k，报警
+    let fsize = (util.getFileSize(f)/1024).toFixed(2)
+    if (fsize > 200){
+        util.error(`[${rf}], 文件尺寸为${fsize}k, 大于200k，请注意!`)
+    }
+
     util.log(`[filter]: ${rf}`)
 
     if (util.match(releaseConf.ignore, rf)){
