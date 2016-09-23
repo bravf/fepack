@@ -89,7 +89,7 @@ function getBody(f){
     else if (util.isext(f, '.css')){
         body2 = `
 void function (){
-    let style = document.createElement('style')
+    let style = ${winFuncName} = document.createElement('style')
     style.type = 'text/css'
     style.innerHTML = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}'
     document.getElementsByTagName('head')[0].appendChild(style)

@@ -1,4 +1,4 @@
-# fepack 
+# fepack
 
 [![Version](http://img.shields.io/npm/v/fepack.svg)](https://www.npmjs.org/package/fepack)
 
@@ -48,6 +48,11 @@ let headTemplate = require('./head.tpl')
 require('./head.html')
 require('./head.jade')
 require('./head.md')
+
+// require css
+// index.css内容会被以style tag方式插入到head里
+// cssModule代表生成的style tag
+let cssModule = require('./index.css')
 
 // require npm安装的node包（不支持依赖native环境的包）
 // 在项目根目录npm install --save cookie
