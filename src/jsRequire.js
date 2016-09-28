@@ -4,6 +4,7 @@ let exec = require('child_process').exec
 let colors = require('colors')
 let deepAssign = require('deep-assign')
 let util = require('./util')
+let resolve = require('browser-resolve')
 
 let g_conf = global.g_conf
 let tmpDir = g_conf.tmpDir
@@ -17,40 +18,18 @@ let depTable = {}
 
 function getRequirePath(currF, requireF){
     let rf = requireF
-    let f
-
-    // 如果缺省扩展名，默认为.js
-    if (!path.extname(rf)){
-        rf = `${rf}.js`
-    }
 
     // 如果是jade,md转换为html
     if (util.isext(rf, '.jade,.md')){
         rf = rf.replace(/\.jade|.md$/, '.html')
     }
 
-    // 先找业务文件夹
-    if (rf[0] == '/'){
-        f = path.join(tmpDir.b, rf)
-    }
-    else {
-        f = path.join(path.dirname(currF), rf)
-    }
-
-    if (!fs.existsSync(f)){
-        // 尝试查找node_modules
-        f = path.join(tmpDir.b, 'node_modules', requireF, 'index.js')
-        if (!fs.existsSync(f)){
-            return ''
-        }
-    }
-
-    return f
+    return resolve.sync(rf, {filename: currF})
 }
 
 //* 扫描当前js文件所有require的模块
 function scanJs(mainF, currF, requireFiles){
-    let body = util.getBody(currF)
+    let body = clearCommentsBody(currF)
     let arr = []
 
     // 开始扫描
@@ -65,19 +44,25 @@ function scanJs(mainF, currF, requireFiles){
             util.error(`Can not find "${arr[i]}"!`)
             continue
         }
-        scanJs(mainF, f, requireFiles)
+        //如果没有处理过
+        if (requireFiles.indexOf(currF) == -1){
+            scanJs(mainF, f, requireFiles)
+        }
     }
 
     if (mainF != currF){
-        if (requireFiles.indexOf(currF) == -1){
-            requireFiles.push(currF)
-        }
+        requireFiles.push(currF)
     }
+}
+
+//* 得到清楚注释的code
+function clearCommentsBody(f){
+    return util.getBody(f).replace(/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg, '')
 }
 
 //* 根据文件类型生成新的文件内容
 function getBody(f){
-    let body = util.getBody(f)
+    let body = clearCommentsBody(f)
     let rf = path.relative(tmpDir.b, f)
     let winFuncName = `window["${rf}"]`
     let body2

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cookie": "^0.3.1"
+    "cookie": "^0.3.1",
+    "echarts": "^3.2.3"
   }
 }

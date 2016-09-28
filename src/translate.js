@@ -79,7 +79,7 @@ images_dir = ""
     sassProcess.stdout.on('data', msg=>{
         util.log(msg)
     })
-    .on('end', msg=>{
+    sassProcess.stdout.on('end', msg=>{
         defer.resolve()
     })
     sassProcess.stderr.on('data', msg=>{

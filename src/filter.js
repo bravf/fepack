@@ -10,11 +10,11 @@ let tmpDir = g_conf.tmpDir
 let releaseConf = g_conf.fepackJSON.release
 
 function filterFile(f){
-    if (!fs.existsSync(f)){
+    let rf = path.relative(g_conf.root, f)
+    
+    if (!fs.existsSync(f) || util.isNodeModulePath(rf)){
         return
     }
-
-    let rf = path.relative(g_conf.root, f)
 
     // check file size
     // 如果大于200k，报警
@@ -32,16 +32,12 @@ function filterFile(f){
         return util.copy(f, path.join(g_conf.case.www, releaseConf.project, rf))
     }
 
-    // node_modules目录直接到b参与jsRequire
     // 参与语法降级的到a
     // 其他全部到b
     let extname = path.extname(f)
     let toDir
 
-    if (util.isNodeModulePath(rf)){
-        toDir = tmpDir.b
-    }
-    else if (util.isext(f, '.ts,.scss,.md,.jade')){
+    if (util.isext(f, '.ts,.scss,.md,.jade')){
         toDir = tmpDir.a
     }
     else {
@@ -53,6 +49,12 @@ function filterFile(f){
 
 function filter(){
     let ps = []
+
+    //处理node_modules目录，直接到b参与jsRequire
+    let a = path.join(g_conf.root, 'node_modules')
+    let b = path.join(tmpDir.b, 'node_modules')
+    ps.push(util.copy(a, b))
+
     util.walk(g_conf.root, f => {
         let p = filterFile(f)
         p && ps.push(p)

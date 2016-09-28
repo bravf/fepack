@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('1.1.2')
+        .version('1.1.3')
         .option('init', 'create fepack.json', _=>{
             createConfig()
         })
@@ -188,7 +188,7 @@ function factory(){
             }
         })
         .catch(msg => {
-            util.error(msg)
+            console.error(msg)
         })
 }
 
