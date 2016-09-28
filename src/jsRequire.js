@@ -57,7 +57,7 @@ function scanJs(mainF, currF, requireFiles){
 
 //* 得到清楚注释的code
 function clearCommentsBody(f){
-    return util.getBody(f).replace(/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg, '')
+    return util.getBody(f).replace(/^\s*\/\*[\s\S]*?\*\/\s*$/mg, '').replace(/^\s*\/\/.*$/mg, '')
 }
 
 //* 根据文件类型生成新的文件内容
