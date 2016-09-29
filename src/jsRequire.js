@@ -29,6 +29,10 @@ function getRequirePath(currF, requireF){
 
 //* 扫描当前js文件所有require的模块
 function scanJs(mainF, currF, requireFiles){
+    if (requireFiles.indexOf(currF) != -1){
+        return
+    }
+
     let body = clearCommentsBody(currF)
     let arr = []
 
@@ -39,15 +43,7 @@ function scanJs(mainF, currF, requireFiles){
     }
 
     for (let i=0; i<arr.length; i++){
-        let f = getRequirePath(currF, arr[i])
-        if (!f){
-            util.error(`Can not find "${arr[i]}"!`)
-            continue
-        }
-        //如果没有处理过
-        if (requireFiles.indexOf(currF) == -1){
-            scanJs(mainF, f, requireFiles)
-        }
+        scanJs(mainF, getRequirePath(currF, arr[i]), requireFiles)
     }
 
     if (mainF != currF){
