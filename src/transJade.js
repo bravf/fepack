@@ -86,16 +86,24 @@ function watch(){
         }
 
         let f = path.join(tmpDir.a, rf)
-        if (util.underline(f)){
-            if (rf in depTable){
-                depTable[rf].forEach(_=>{
-                    transJade(_)
-                })
-            }
+        // if (util.underline(f)){
+        //     if (rf in depTable){
+        //         depTable[rf].forEach(_=>{
+        //             transJade(_)
+        //         })
+        //     }
+        // }
+        // else {
+        //     transJade(f)
+        // }
+
+        // 不再检测下划线开头的私有文件，因为可能在编译的下阶段被js引用
+        if (rf in depTable){
+            depTable[rf].forEach(_=>{
+                transJade(_)
+            })
         }
-        else {
-            transJade(f)
-        }
+        transJade(f)
     })
 }
 
