@@ -121,7 +121,12 @@ let cookie = require('cookie')
         "ignore": [
             "static/script/ignore/**/*",
             "fepack.json"
-        ]
+        ],
+
+        // 设置全局模块引用
+        "externals": {
+            "jquery": "window.$"
+        }
     }
 }
 ```

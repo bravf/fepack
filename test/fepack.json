@@ -33,6 +33,10 @@
         "ignore": [
             "fepack.json",
             "ignore/**/*"
-        ]
+        ],
+
+        "externals": {
+            "jquery": "window.$"
+        }
     }
 }

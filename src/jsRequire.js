@@ -9,6 +9,7 @@ let resolve = require('browser-resolve')
 let g_conf = global.g_conf
 let tmpDir = g_conf.tmpDir
 let releaseConf = g_conf.fepackJSON.release
+let externals = releaseConf.externals
 
 let requireReg = /require\(['|"](.*?)['|"]\)/g
 
@@ -43,7 +44,10 @@ function scanJs(mainF, currF, requireFiles){
     }
 
     for (let i=0; i<arr.length; i++){
-        scanJs(mainF, getRequirePath(currF, arr[i]), requireFiles)
+        //检查是否在externals中
+        if ( !(arr[i] in externals) ){
+            scanJs(mainF, getRequirePath(currF, arr[i]), requireFiles)
+        }
     }
 
     if (mainF != currF){
@@ -87,8 +91,13 @@ void function (module, exports){
     }
 
     body2 = body2.replace(requireReg, (a, b)=>{
-        let requirePath = path.relative(tmpDir.b, getRequirePath(f, b))
-        return `window["${requirePath}"]`
+        if (b in externals){
+            return externals[b]
+        }
+        else {
+            let requirePath = path.relative(tmpDir.b, getRequirePath(f, b))
+            return `window["${requirePath}"]`
+        }
     })
 
     return body2

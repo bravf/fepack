@@ -16,4 +16,7 @@ console.log(require('../jade/index.jade'))
 console.log(require('../sass/jsRequire.css'))
 
 
-var echarts = require('echarts');
+//var echarts = require('echarts');
+
+var $ = require('jquery')
+console.log($(document.body))
