@@ -51,7 +51,7 @@ function isJade(f){
 }
 
 function transJade(f){
-    if (!fs.existsSync(f) || !isJade(f) || util.underline(f)){
+    if (!fs.existsSync(f) || !isJade(f)){
         return
     }
 

@@ -21,7 +21,7 @@ function cHtml(body){
 <!DOCTYPE html>
 <html>
 <head>
-<title>small-fec</title>
+<title>fepack</title>
 <style>
 a{
     font-size: 18px;
