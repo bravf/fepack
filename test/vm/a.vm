@@ -1,0 +1,17 @@
+#if ($data.bool)
+    测试if语句
+#end
+
+<br>变量打印：$data.var
+
+<br>设置变量值：
+#set($myvar = 'good var')
+${myvar}
+
+<br>循环打印：
+#foreach ($stu in $data.stus)
+    ${stu.name}
+#end
+
+<br>parse其他文件：
+#parse('b.vm')

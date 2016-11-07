@@ -1,0 +1,14 @@
+{
+    "data": {
+        "bool": true,
+        "var": "你好,123",
+        "stus": [
+            {
+                "name": "zhangsan"
+            },
+            {
+                "name": "lisi"
+            }
+        ]
+    }
+}
