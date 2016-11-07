@@ -4,6 +4,8 @@ let path = require('path')
 let mime = require('./mime').types
 let fs = require('fs')
 let exec = require('child_process').exec
+let velocity = require('velocityjs')
+let util = require('../util')
 
 let g_conf = global.g_conf
 let tmpDir = g_conf.tmpDir
@@ -79,22 +81,42 @@ let server = http.createServer((req, res) => {
                 let ext = path.extname(realPath)
                 ext = ext ? ext.slice(1) : mime.txt
 
-                fs.readFile(realPath, 'binary', (err, file) => {
-                    if (err){
-                        res.writeHead(500, {
-                            'Content-type': mime.txt
-                        })
-                        res.end(err)
-                    }
-                    else {
-                        res.writeHead(200, {
-                            'Content-type': mime[ext],
-                            'Access-Control-Allow-Origin': '*'
-                        })
-                        res.write(file, 'binary')
-                        res.end()
-                    }
-                })
+                //如果是vm，则进行解析
+                if (ext == 'vm'){
+                    let pathObj = path.parse(realPath)
+                    let vmBody = util.getBody(realPath)
+                    let vmJSON = JSON.parse(util.getBody(`${pathObj.dir}/${pathObj.name}.json`))
+                    
+                    //let output = velocity.render(vmBody, vmJSON)
+                    //console.log(ou)
+
+                    let output = velocity.render(pathObj.base, vmJSON, pathObj.dir)
+
+                    res.writeHead(200, {
+                        'Content-type': mime[ext] + '; charset=utf-8',
+                        'Access-Control-Allow-Origin': '*'
+                    })
+                    res.write(output)
+                    res.end()
+                }
+                else {
+                    fs.readFile(realPath, 'binary', (err, file) => {
+                        if (err){
+                            res.writeHead(500, {
+                                'Content-type': mime.txt
+                            })
+                            res.end(err)
+                        }
+                        else {
+                            res.writeHead(200, {
+                                'Content-type': mime[ext],
+                                'Access-Control-Allow-Origin': '*'
+                            })
+                            res.write(file, 'binary')
+                            res.end()
+                        }
+                    })
+                }
             }
         }
     })

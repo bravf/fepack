@@ -98,7 +98,7 @@ function v1(f){
     let f2 = path.join(toDir, path.relative(fromDir, f))
 
     let v = ''
-    if (gCase.version){
+    if (gCase.version && !util.isext(f, '.json')){
         v = util.getMd5(util.getBody(f))
         vtable[f] = v
         v = `.${v}`
