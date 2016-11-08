@@ -8,7 +8,7 @@
 
         "cases" : {
             "dev": {
-                "optimize": false,
+                "optimize": true,
                 "version": true,
                 "watch": true,
                 "domain": false,

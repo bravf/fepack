@@ -64,7 +64,7 @@ function clearCommentsBody(f){
 function getBody(f){
     let body = clearCommentsBody(f)
     let rf = path.relative(tmpDir.b, f)
-    let winFuncName = `window["${rf}"]`
+    let winFuncName = `window["${util.getMd5(rf)}"]`
     let body2
 
     // 如果tpl
@@ -74,10 +74,10 @@ function getBody(f){
     else if (util.isext(f, '.css')){
         body2 = `
 void function (){
-    let style = ${winFuncName} = document.createElement('style')
-    style.type = 'text/css'
-    style.innerHTML = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}'
-    document.getElementsByTagName('head')[0].appendChild(style)
+    var style = ${winFuncName} = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}';
+    document.getElementsByTagName('head')[0].appendChild(style);
 }();
         `
     }
@@ -96,7 +96,7 @@ void function (module, exports){
         }
         else {
             let requirePath = path.relative(tmpDir.b, getRequirePath(f, b))
-            return `window["${requirePath}"]`
+            return `window["${util.getMd5(requirePath)}"]`
         }
     })
 
