@@ -10,6 +10,11 @@ let tmpDir = g_conf.tmpDir
 let releaseConf = g_conf.fepackJSON.release
 
 function filterFile(f){
+    //忽略__fepack-tmp
+    if ( f.indexOf('__fepack-tmp/') != -1 ){
+        return false
+    }
+
     let rf = path.relative(g_conf.root, f)
     
     if (!fs.existsSync(f) || util.isNodeModulePath(rf)){
@@ -64,9 +69,7 @@ function filter(){
 
 function watch(){
     fs.watch(g_conf.root, {recursive:true}, (e, f) => {
-        if ( (f.slice(0, 13) != '__fepack-tmp/') ){
-            filterFile(path.join(g_conf.root, f))
-        }
+        filterFile(path.join(g_conf.root, f))
     })
 }
 
