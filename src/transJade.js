@@ -61,8 +61,8 @@ function transJade(f){
 
     util.log(`[translate]: ${rf}`)
 
-    // 用jade来写tpl文件的方式
-    if (f.slice(-9) == '.tpl.jade'){
+    // 用jade来写(tpl|vm|..)文件的方式
+    if (/\.\w+?\.jade$/.test(rf)){
         f2 = path.join(tmpDir.b, rf.slice(0, -5))
     }
     else {
