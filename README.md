@@ -31,6 +31,7 @@ fepack server start
     (typescript,es6) => es5
     sass => css
     (jade,md) => html
+    jsx => js
 
 2、静态资源加版本号
 3、文件压缩
