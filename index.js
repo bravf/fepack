@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('1.2.3')
+        .version('1.2.4')
         .option('init', 'create fepack.json', _=>{
             createConfig()
         })
@@ -100,8 +100,9 @@ function initConfig(){
     }
 
     //* 构造临时目录路径
-    'abcdef'.split('').forEach(_ => {
-        g_conf.tmpDir[_] = path.join(root, tmp, _)
+    'abcd'.split('').forEach(_ => {
+        let p = path.join(root, tmp, _)
+        g_conf.tmpDir[_] = p
     })
 
     //* 读取fepack配置文件
@@ -156,6 +157,13 @@ function cleanTmpDir(){
     return defer.promise
 }
 
+function createTmpDir(){
+    for (let k in g_conf.tmpDir){
+        util.createF(g_conf.tmpDir[k])
+    }
+    return Promise.resolve()
+}
+
 function factory(){
     let gCase = g_conf.case
     let filter = require('./src/filter')
@@ -165,6 +173,9 @@ function factory(){
     let version = require('./src/version')
 
     cleanTmpDir()
+        .then(_ => {
+            return createTmpDir()
+        })
         .then(_ => {
             return filter.filter()
         })
