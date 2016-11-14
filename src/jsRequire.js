@@ -55,9 +55,11 @@ function scanJs(mainF, currF, requireFiles){
     }
 }
 
-//* 得到清楚注释的code
+//* 得到清楚注释的code (https://github.com/seajs/seajs/issues/478)
 function clearCommentsBody(f){
-    return util.getBody(f).replace(/^\s*\/\*[\s\S]*?\*\/\s*$/mg, '').replace(/^\s*\/\/.*$/mg, '')
+    return util.getBody(f).replace(/"(?:\\"|[^"])*"|'(?:\\'|[^'])*'|([^\\])([/][*][\S\s]*?(?:[*][/]|$)|[/][/].*)/g, function($0, $1) {
+        return $1 || $0
+    })
 }
 
 //* 根据文件类型生成新的文件内容
