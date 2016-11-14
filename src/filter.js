@@ -42,11 +42,16 @@ function filterFile(f){
     let extname = path.extname(f)
     let toDir
 
-    if (util.isext(f, '.ts,.scss,.md,.jade,.js')){
+    if (util.isext(f, '.ts,.scss,.md,.jade,.js,.jsx')){
         toDir = tmpDir.a
     }
     else {
         toDir = tmpDir.b
+    }
+
+    // 如果是jsx文件，改成tsx后缀，方便tsc识别
+    if (util.isext(rf, '.jsx')){
+        rf = rf.replace('.jsx', '.tsx')
     }
 
     return util.copy(f, path.join(toDir, rf))

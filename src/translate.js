@@ -24,7 +24,8 @@ function transts(){
         "module": "commonjs",
         "rootDir": ".",
         "outDir": "../b",
-        "allowJs": true
+        "allowJs": true,
+        "jsx": "react"
     },
     "filesGlob": [
         "./**/*.ts",
