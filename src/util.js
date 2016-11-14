@@ -90,12 +90,17 @@ util.copy = function (f1, f2){
     let defer = Promise.defer()
 
     util.createF(path.dirname(f2))
-    exec(`cp -f -r ${f1} ${f2}`).stdout.on('data', data=>{
+
+    let copyProcess = exec(`cp -f -r ${f1} ${f2}`)
+    
+    copyProcess.stdout.on('data', data=>{
         console.log(data)
     })
-    .on('end', _=>{
+
+    copyProcess.stdout.on('end', _=>{
         defer.resolve()
     })
+    
     return defer.promise
 }
 
