@@ -4,6 +4,9 @@ let crypto = require('crypto')
 let exec = require('child_process').exec
 let minimatch = require("minimatch")
 let colors = require('colors')
+let esprima = require('esprima')
+
+//let hello = require('hello') 
 
 let util = {}
 
@@ -149,6 +152,97 @@ util.isext = function (f, exts){
 
 util.isNodeModulePath = function (f){
     return f.indexOf('node_modules/') != -1
+}
+
+//去除注释
+util.delComment = function (code){
+    return code.replace(/([^\\]|^)(((\/\*)[\s\S]*?\*\/)|((\/\/).*$))/mg, function(){
+        var codeLen = code.length;
+        var args = arguments,argsLen = args.length;
+        var comment = args[0],
+            pos = args[argsLen - 2],
+            multi = args[4] == '/*';
+        if(!~comment.indexOf('\n')){//多行不会出现在字符串中
+            var tempChar,tempIndex = pos + (multi?comment.length:2);
+            while((tempChar = code.charAt(tempIndex++)) != '\n' && tempIndex < codeLen){
+                if(tempChar == "'" || tempChar == '"'){
+                    tempIndex = pos;
+                    var leftQuotes = 0,rightChar = tempChar;
+                    while((tempChar = code.charAt(tempIndex--)) != '\n' && tempIndex >= 0){
+                        if(tempChar == rightChar){
+                            leftQuotes ++;
+                        }
+                    }
+                    if(leftQuotes % 2 == 1){//有单数个->注释在引号中
+                        return comment;
+                    }
+                    break;
+                }
+            }
+        }
+        return args[1];
+    });
+}
+
+// 得到Js require 依赖 (by tokens, 解析某些文件bug)
+util.getRequireDeps = function (code){
+    let tokens = esprima.tokenize(code)
+    let reqs = {}
+
+    for (let i=0,len=tokens.length; i<len; i++){
+        let token = tokens[i]
+        if (token.type == 'Identifier' && token.value == "require"){
+            // i索引向前进2
+            i = i + 2
+            let token2 = tokens[i]
+
+            if (token2){
+                let reqValue = token2.value
+                if ( !(reqValue in reqs) ){
+                    reqs[reqValue] = ''
+                }
+            }
+        }
+    }
+
+    return Object.keys(reqs)
+}
+
+util.getType = function (obj){
+    return Object.prototype.toString.call(obj).slice(8,-1)
+}
+
+// 得到js require依赖 (by ast tree)
+util.getRequireDepsByAst = function (code){
+    let astTree = esprima.parse(code)
+    let requires = {}
+
+    function walk(obj){
+        let otype = util.getType(obj)
+
+        if (otype == 'Array'){
+            obj.forEach(_=>{
+                walk(_)
+            })
+        }
+        else if (otype == 'Object'){
+            if (obj.type == 'CallExpression' && obj.callee.type == 'Identifier' &&  obj.callee.name == 'require'){
+                let reqValue = obj.arguments[0].value
+                if (!(reqValue in requires)){
+                    requires[reqValue] = ''
+                }
+            }
+            else {
+                for (k in obj){
+                    walk(obj[k])
+                }
+            }
+        }
+    }
+
+    walk(astTree.body)
+
+    return Object.keys(requires)
 }
 
 module.exports = util

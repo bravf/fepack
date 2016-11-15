@@ -34,19 +34,15 @@ function scanJs(mainF, currF, requireFiles){
         return
     }
 
-    let body = clearCommentsBody(currF)
-    let arr = []
+    if (util.isext(currF, '.js')){
+        let code = util.getBody(currF)
+        let arr = util.getRequireDepsByAst(code)
 
-    // 开始扫描
-    let regValue
-    while ( (regValue = requireReg.exec(body)) != null ){
-        arr.push(regValue[1])
-    }
-
-    for (let i=0; i<arr.length; i++){
-        //检查是否在externals中
-        if ( !(arr[i] in externals) ){
-            scanJs(mainF, getRequirePath(currF, arr[i]), requireFiles)
+        for (let i=0; i<arr.length; i++){
+            //检查是否在externals中
+            if ( !(arr[i] in externals) ){
+                scanJs(mainF, getRequirePath(currF, arr[i]), requireFiles)
+            }
         }
     }
 
@@ -55,18 +51,11 @@ function scanJs(mainF, currF, requireFiles){
     }
 }
 
-//* 得到清楚注释的code (https://github.com/seajs/seajs/issues/478)
-function clearCommentsBody(f){
-    return util.getBody(f).replace(/"(?:\\"|[^"])*"|'(?:\\'|[^'])*'|([^\\])([/][*][\S\s]*?(?:[*][/]|$)|[/][/].*)/g, function($0, $1) {
-        return $1 || $0
-    })
-}
-
 //* 根据文件类型生成新的文件内容
 function getBody(f){
-    let body = clearCommentsBody(f)
+    let body = util.getBody(f)
     let rf = path.relative(tmpDir.b, f)
-    let winFuncName = `window["${util.getMd5(rf)}"]`
+    let winFuncName = g_conf.case.optimize ? `window["${util.getMd5(rf)}"]` : `window["${rf}"]`
     let body2
 
     // 如果tpl
@@ -90,17 +79,22 @@ void function (module, exports){
     ${body.replace(/(module\.)?exports/g, winFuncName).replace(/(^|\n)/g, '\n\t')};
 }({exports:{}}, {});
         `
-    }
+        // 把所有require('xx')转换为window['xx']引用
+        let requires = util.getRequireDepsByAst(body)
+        requires.forEach(_=>{
+            let reg = RegExp(`(?:require\\('${_}'\\))|(?:require\\("${_}"\\))`, 'g')
 
-    body2 = body2.replace(requireReg, (a, b)=>{
-        if (b in externals){
-            return externals[b]
-        }
-        else {
-            let requirePath = path.relative(tmpDir.b, getRequirePath(f, b))
-            return `window["${util.getMd5(requirePath)}"]`
-        }
-    })
+            if (_ in externals){
+                body2 = body2.replace(reg, externals[_])
+            }
+            else {
+                let requirePath = path.relative(tmpDir.b, getRequirePath(f, _))
+                let afterStr = g_conf.case.optimize ? `window["${util.getMd5(requirePath)}"]` : `window["${requirePath}"]`
+                
+                body2 = body2.replace(reg, afterStr)
+            }
+        })
+    }
 
     return body2
 }
