@@ -6,15 +6,16 @@ let code2 = util.getBody('/Users/bravf/code/mljr/mkt-platform/static/htmls/compa
 
 //console.log(esprima.tokenize(code))
 
-// let code = `var req1 = require('req1');
-// var req2 = require('req2');
-// console.log(require('req3'))
-// console.log('require("req4")')
-// `
+code = `var req1 = require('req1');
+var req2 = require('req2');
+console.log(require('req3'))
+console.log('require("req4")')
+require('hello' + ' world')
+`
 
-//let parseJSONCode = JSON.stringify(esprima.parse(code))
+let parseJSONCode = JSON.stringify(esprima.parse(code))
 //parseJSONCode = JSON.stringify(esprima.tokenize(code))
-//util.createF('/Users/bravf/code/github/fepack/src/pjc.json', parseJSONCode)
+util.createF('/Users/bravf/code/github/fepack/src/pjc.json', parseJSONCode)
 
 console.log(util.getRequireDepsByAst(code))
 console.log(util.getRequireDepsByAst(code2))

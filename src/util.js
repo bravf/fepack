@@ -226,8 +226,16 @@ util.getRequireDepsByAst = function (code){
             })
         }
         else if (otype == 'Object'){
-            if (obj.type == 'CallExpression' && obj.callee.type == 'Identifier' &&  obj.callee.name == 'require'){
-                let reqValue = obj.arguments[0].value
+            let callee = obj.callee
+            let args = obj.arguments
+
+            if (obj.type == 'CallExpression' && 
+                    callee.type == 'Identifier' &&  
+                    callee.name == 'require' &&
+                    args.length == 1 &&
+                    args[0].type == 'Literal'
+            ){
+                let reqValue = args[0].value
                 if (!(reqValue in requires)){
                     requires[reqValue] = ''
                 }
