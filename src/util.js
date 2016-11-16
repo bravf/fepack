@@ -5,8 +5,7 @@ let exec = require('child_process').exec
 let minimatch = require("minimatch")
 let colors = require('colors')
 let esprima = require('esprima')
-
-//let hello = require('hello') 
+let escodegen = require('escodegen')
 
 let util = {}
 
@@ -212,9 +211,9 @@ util.getType = function (obj){
     return Object.prototype.toString.call(obj).slice(8,-1)
 }
 
-// 得到js require依赖 (by ast tree)
+// 得到js require依赖 (by ast)
 util.getRequireDepsByAst = function (code){
-    let astTree = esprima.parse(code)
+    let ast = util.getType(code) == 'Object' ? code : esprima.parse(code)
     let requires = {}
 
     function walk(obj){
@@ -248,9 +247,12 @@ util.getRequireDepsByAst = function (code){
         }
     }
 
-    walk(astTree.body)
+    walk(ast.body)
 
-    return Object.keys(requires)
+    return {
+        requires: Object.keys(requires),
+        ast: ast
+    } 
 }
 
 module.exports = util

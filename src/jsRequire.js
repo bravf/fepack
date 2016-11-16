@@ -17,6 +17,10 @@ let requireReg = /require\(['|"](.*?)['|"]\)/g
 // {'/static/_a.js':['/static/index.js', '/static/index2.js']}
 let depTable = {}
 
+//* 文件对象表
+// {'/static/a.js':{code:code, ast:ast}}
+let fileTable = {}
+
 function getRequirePath(currF, requireF){
     let rf = requireF
 
@@ -36,7 +40,8 @@ function scanJs(mainF, currF, requireFiles){
 
     if (util.isext(currF, '.js')){
         let code = util.getBody(currF)
-        let arr = util.getRequireDepsByAst(code)
+        let rs = util.getRequireDepsByAst(code)
+        let arr = rs.requires
 
         for (let i=0; i<arr.length; i++){
             //检查是否在externals中
@@ -80,7 +85,7 @@ void function (module, exports){
 }({exports:{}}, {});
         `
         // 把所有require('xx')转换为window['xx']引用
-        let requires = util.getRequireDepsByAst(body)
+        let requires = util.getRequireDepsByAst(body).requires
         requires.forEach(_=>{
             let reg = RegExp(`(?:require\\('${_}'\\))|(?:require\\("${_}"\\))`, 'g')
 
