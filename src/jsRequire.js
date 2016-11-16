@@ -18,7 +18,7 @@ let requireReg = /require\(['|"](.*?)['|"]\)/g
 let depTable = {}
 
 //* 文件对象表
-// {'/static/a.js':{code:code, ast:ast}}
+// {'/static/a.js':{code:code, ast:ast, requires:[]}}
 let fileTable = {}
 
 function getRequirePath(currF, requireF){
@@ -38,17 +38,27 @@ function scanJs(mainF, currF, requireFiles){
         return
     }
 
-    if (util.isext(currF, '.js')){
-        let code = util.getBody(currF)
-        let rs = util.getRequireDepsByAst(code)
-        let arr = rs.requires
+    let code = util.getBody(currF)
+    let ast
+    let requires
 
-        for (let i=0; i<arr.length; i++){
+    if (util.isext(currF, '.js')){
+        let rs = util.getRequireDepsByAst(code)
+        requires = rs.requires
+        ast = rs.ast
+
+        for (let i=0; i<requires.length; i++){
             //检查是否在externals中
-            if ( !(arr[i] in externals) ){
-                scanJs(mainF, getRequirePath(currF, arr[i]), requireFiles)
+            if ( !(requires[i] in externals) ){
+                scanJs(mainF, getRequirePath(currF, requires[i]), requireFiles)
             }
         }
+    }
+
+    fileTable[currF] = {
+        code: code,
+        ast: ast,
+        requires: requires
     }
 
     if (mainF != currF){
@@ -58,7 +68,7 @@ function scanJs(mainF, currF, requireFiles){
 
 //* 根据文件类型生成新的文件内容
 function getBody(f){
-    let body = util.getBody(f)
+    let body = fileTable[f].code
     let rf = path.relative(tmpDir.b, f)
     let winFuncName = g_conf.case.optimize ? `window["${util.getMd5(rf)}"]` : `window["${rf}"]`
     let body2
@@ -85,7 +95,7 @@ void function (module, exports){
 }({exports:{}}, {});
         `
         // 把所有require('xx')转换为window['xx']引用
-        let requires = util.getRequireDepsByAst(body).requires
+        let requires = fileTable[f].requires
         requires.forEach(_=>{
             let reg = RegExp(`(?:require\\('${_}'\\))|(?:require\\("${_}"\\))`, 'g')
 
