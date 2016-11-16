@@ -1,6 +1,6 @@
 {
   "name": "fepack",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "a easy web tool",
   "main": "index.js",
   "scripts": {

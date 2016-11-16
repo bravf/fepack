@@ -48,6 +48,14 @@ function gPath(f1, f2){
         f3 = path.join(path.dirname(f1), f2)
     }
 
+    //如果不在d中
+    if (!fs.existsSync(f3)){
+        //检查是否在www中
+        if (!fs.existsSync(path.join(g_conf.case.www, releaseConf.project, f2))){
+            return false
+        }
+    }
+
     return f3
 }
 
