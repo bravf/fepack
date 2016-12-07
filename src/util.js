@@ -1,4 +1,4 @@
-let fs = require('fs')
+let fs = require('fs-extra')
 let path = require('path')
 let crypto = require('crypto')
 let exec = require('child_process').exec
@@ -91,18 +91,16 @@ util.createF = function (f, body){
 util.copy = function (f1, f2){
     let defer = Promise.defer()
 
-    util.createF(path.dirname(f2))
-
-    let copyProcess = exec(`cp -f -r ${f1} ${f2}`)
-    
-    copyProcess.stdout.on('data', data=>{
-        console.log(data)
+    fs.copy(f1, f2, (err) => {
+        if (err){
+            console.log(err)
+            defer.reject()
+        }
+        else {
+            defer.resolve()
+        }
     })
 
-    copyProcess.stdout.on('end', _=>{
-        defer.resolve()
-    })
-    
     return defer.promise
 }
 

@@ -63,7 +63,11 @@ function filter(){
     //处理node_modules目录，直接到b参与jsRequire
     let a = path.join(g_conf.root, 'node_modules')
     let b = path.join(tmpDir.b, 'node_modules')
-    ps.push(util.copy(a, b))
+
+    //是否有node_modules
+    if (fs.existsSync(a)){
+        ps.push(util.copy(a, b))
+    }
 
     util.walk(g_conf.root, f => {
         let p = filterFile(f)
