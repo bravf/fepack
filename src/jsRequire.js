@@ -159,7 +159,15 @@ function jsRequire(){
             }
             else {
                 if (!util.isNodeModulePath(f)){
-                    ps.push(util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f))))
+                    let cpath = path.join(tmpDir.c, path.relative(tmpDir.b, f))
+
+                    //如果css文件，进行postcss处理
+                    if (util.isext(f, '.css')){
+                        ps.push(util.postcss(f, cpath))
+                    }
+                    else {
+                        ps.push(util.copy(f, cpath))
+                    }
                 }
             }
         }
@@ -180,6 +188,9 @@ function watch(){
             else {
                 if (util.isext(f, '.js')){
                     compileJs(f)
+                }
+                else if (util.isext(f, '.css')){
+                    util.postcss(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
                 }
             }
         }

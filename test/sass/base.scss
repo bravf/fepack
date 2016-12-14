@@ -4,3 +4,18 @@ $color: #fff;
     color: $color;
     font-size: 12px;
 }
+
+
+.a {
+    display: flex;
+    color: red;
+}
+.b{
+    border-radius: 1px;
+}
+.c{
+    transform: translate(0 ,0);
+}
+.d{
+    background-size: contain;
+}
