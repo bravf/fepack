@@ -7,10 +7,6 @@ let colors = require('colors')
 let esprima = require('esprima')
 let escodegen = require('escodegen')
 
-let postcss = require('postcss')
-let autoprefixer = require('autoprefixer')
-let pxtorem = require('postcss-pxtorem')
-
 let util = {}
 
 util.log = function (msg){
@@ -257,17 +253,6 @@ util.getRequireDepsByAst = function (code){
     } 
 }
 
-util.postcss = function (f, f2){
-    let css = util.getBody(f)
-    return postcss([
-        autoprefixer({browsers: ['last 2 versions', 'iOS 7', 'Android 4.4', '> 5%']}),
-        pxtorem({
-            root_value: 40,
-            prop_white_list: []
-        })
-    ]).process(css).then(_=>{
-        util.createF(f2, _.css)
-    })
-}
+
 
 module.exports = util

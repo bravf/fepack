@@ -10,6 +10,7 @@ let g_conf = global.g_conf
 let tmpDir = g_conf.tmpDir
 let releaseConf = g_conf.fepackJSON.release
 let externals = releaseConf.externals
+let postcssConf = releaseConf.postcss
 
 let requireReg = /require\(['|"](.*?)['|"]\)/g
 
@@ -163,7 +164,7 @@ function jsRequire(){
 
                     //如果css文件，进行postcss处理
                     if (util.isext(f, '.css')){
-                        ps.push(util.postcss(f, cpath))
+                        ps.push(fePostcss(f, cpath))
                     }
                     else {
                         ps.push(util.copy(f, cpath))
@@ -190,7 +191,7 @@ function watch(){
                     compileJs(f)
                 }
                 else if (util.isext(f, '.css')){
-                    util.postcss(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
+                    fePostcss(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
                 }
             }
         }
@@ -198,6 +199,29 @@ function watch(){
         if (!util.underline(f) && !util.isNodeModulePath(f) && !util.isext(f, '.js')){
             util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
         }
+    })
+}
+
+
+//postcss处理
+let postcss = require('postcss')
+let autoprefixer = require('autoprefixer')
+let pxtorem = require('postcss-pxtorem')
+
+function fePostcss(f, f2){
+    let css = util.getBody(f)
+    let items = []
+
+    if ('autoprefixer' in postcssConf){
+        items.push(autoprefixer(postcssConf['autoprefixer']))
+    }
+
+    if ('pxtorem' in postcssConf){
+        items.push(pxtorem(postcssConf['pxtorem']))
+    }
+
+    return postcss(items).process(css).then(_=>{
+        util.createF(f2, _.css)
     })
 }
 

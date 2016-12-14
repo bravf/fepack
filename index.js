@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('2.0.6')
+        .version('2.0.7')
         .option('init', 'create fepack.json', _=>{
             createConfig()
         })
@@ -74,6 +74,8 @@ function createConfig(){
             "fepack.json"
         ],
         "externals": {
+        },
+        "postcss": {
         }
     },
     "deploy": {
@@ -125,7 +127,8 @@ function initConfig(){
             cases: {},
             copy: [],
             igonre: [],
-            externals: {}
+            externals: {},
+            postcss: {}
         }
     }, fepackJSON)
 
