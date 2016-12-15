@@ -190,14 +190,16 @@ function watch(){
                 if (util.isext(f, '.js')){
                     compileJs(f)
                 }
-                else if (util.isext(f, '.css')){
-                    fePostcss(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
-                }
             }
         }
 
         if (!util.underline(f) && !util.isNodeModulePath(f) && !util.isext(f, '.js')){
-            util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
+            if (util.isext(f, '.css')){
+                fePostcss(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
+            }
+            else {
+                util.copy(f, path.join(tmpDir.c, path.relative(tmpDir.b, f)))
+            }
         }
     })
 }
@@ -209,6 +211,7 @@ let autoprefixer = require('autoprefixer')
 let pxtorem = require('postcss-pxtorem')
 
 function fePostcss(f, f2){
+    let defer = Promise.defer()
     let css = util.getBody(f)
     let items = []
 
@@ -220,9 +223,12 @@ function fePostcss(f, f2){
         items.push(pxtorem(postcssConf['pxtorem']))
     }
 
-    return postcss(items).process(css).then(_=>{
+    postcss(items).process(css).then(_=>{
         util.createF(f2, _.css)
+        defer.resolve()
     })
+
+    return defer.promise
 }
 
 exports.jsRequire = jsRequire

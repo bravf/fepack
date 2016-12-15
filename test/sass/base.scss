@@ -2,16 +2,17 @@ $color: #fff;
 
 .block{
     color: $color;
-    font-size: 12px;
+    font-size: 1rem;
 }
 
 
 .a {
     display: flex;
     color: red;
+    border: 1px solid #000;
 }
 .b{
-    border-radius: 1px;
+    border-radius: 16px;
 }
 .c{
     transform: translate(0 ,0);
