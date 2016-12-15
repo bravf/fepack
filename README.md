@@ -127,6 +127,15 @@ let cookie = require('cookie')
         // 设置全局模块引用
         "externals": {
             "jquery": "window.$"
+        },
+
+        // 设置postcss配置
+        "postcss": {
+            "autoprefixer": {"browsers": ["last 2 versions", "iOS 7", "Android 4.4", "> 5%"]},
+            "pxtorem": {
+                "root_value": 40,
+                "prop_white_list": []
+            }
         }
     }
 }
