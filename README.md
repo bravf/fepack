@@ -26,18 +26,20 @@ fepack server start
 ```
 
 ##支持功能
-```
-1、语法增强，支持
+1. 语法增强，支持
+    ```
     (typescript,es6) => es5
     sass => css
     (jade,md) => html
     jsx => js
+    ```
 
-2、静态资源加版本号
-3、文件压缩
-4、源文件常量注入
-5、文件大小检测，主要是图片文件，默认大于200k报警
-```
+2. 静态资源加版本号
+3. 文件压缩
+4. 源文件常量注入
+5. 文件大小检测，主要是图片文件，默认大于200k报警
+6. 增加velocity模板语法支持，[用法](https://github.com/bravf/fepack/tree/master/test/vm)
+
 
 ##模块加载
 ###fepack支持browserify式的模块加载
