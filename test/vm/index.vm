@@ -1,1 +1,9 @@
+#parse("vm/head.vm")
+
 ${hello}
+
+#macro(commonFn, $a)
+    <div class="common">$a</div>
+#end
+
+#commonFn('测试macro')
