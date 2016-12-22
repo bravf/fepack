@@ -1,6 +1,6 @@
 {
   "name": "fepack",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "a easy web tool",
   "main": "index.js",
   "scripts": {
@@ -34,7 +34,7 @@
     "postcss": "^5.2.6",
     "postcss-pxtorem": "^3.3.1",
     "uglify-js": "^2.7.3",
-    "velocityjs": "^0.9.1"
+    "velocity": "^0.7.2"
   },
   "bin": {
     "fepack": "./bin/fepack"

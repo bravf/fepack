@@ -7,6 +7,8 @@ let exec = require('child_process').exec
 let velocity = require('velocityjs')
 let util = require('../util')
 
+let Engine = require('velocity').Engine
+
 let g_conf = global.g_conf
 let tmpDir = g_conf.tmpDir
 let gCase = g_conf.case
@@ -85,13 +87,15 @@ let server = http.createServer((req, res) => {
                 if (ext == 'vm'){
                     let pathObj = path.parse(realPath)
                     let vmBody = util.getBody(realPath)
-                    let vmJSON = JSON.parse(util.getBody(`${pathObj.dir}/${pathObj.name}.json`))
-                    
-                    //let output = velocity.render(vmBody, vmJSON)
-                    //console.log(ou)
 
-                    let output = velocity.render(pathObj.base, vmJSON, pathObj.dir)
-console.log(output)
+                    let vmJSON = require(`${pathObj.dir}/${pathObj.name}.vm.js`)
+
+                    let engineObj = new Engine({
+                        root: ['./'],
+                        template: vmBody
+                    })
+                    let output = engineObj.render(vmJSON)
+
                     res.writeHead(200, {
                         'Content-type': mime[ext] + '; charset=utf-8',
                         'Access-Control-Allow-Origin': '*'

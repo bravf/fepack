@@ -33,7 +33,9 @@ function filterFile(f){
     if (util.match(releaseConf.ignore, rf)){
         return false
     }
-    if (util.match(releaseConf.copy, rf)){
+
+    // 如果.vm.js，则是vm的context文件，直接跳过
+    if (util.match(releaseConf.copy, rf) || rf.slice(-6)=='.vm.js'){
         return util.copy(f, path.join(g_conf.case.www, releaseConf.project, rf))
     }
 
