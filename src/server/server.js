@@ -90,7 +90,9 @@ let server = http.createServer((req, res) => {
                     let vmJSON = {}
                     
                     try{
-                        vmJSON = require(`${pathObj.dir}/${pathObj.name}.vm.js`)
+                        let jsonPath = `${pathObj.dir}/${pathObj.name}.vm.js`
+                        delete require.cache[jsonPath]
+                        vmJSON = require(jsonPath)
                     }
                     catch(ex){}
 
