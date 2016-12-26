@@ -1,6 +1,6 @@
 #parse("vm/head.vm")
 
-${hello}
+<br>...${hello}...
 
 #macro(commonFn, $a)
     <div class="common">$a</div>

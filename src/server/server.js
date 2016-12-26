@@ -87,7 +87,12 @@ let server = http.createServer((req, res) => {
                     let pathObj = path.parse(realPath)
                     let vmBody = util.getBody(realPath)
 
-                    let vmJSON = require(`${pathObj.dir}/${pathObj.name}.vm.js`)
+                    let vmJSON = {}
+                    
+                    try{
+                        vmJSON = require(`${pathObj.dir}/${pathObj.name}.vm.js`)
+                    }
+                    catch(ex){}
 
                     let engineObj = new Engine({
                         root: ['./'],
