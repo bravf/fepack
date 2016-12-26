@@ -4,7 +4,6 @@ let path = require('path')
 let mime = require('./mime').types
 let fs = require('fs')
 let exec = require('child_process').exec
-let velocity = require('velocityjs')
 let util = require('../util')
 
 let Engine = require('velocity').Engine
