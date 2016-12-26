@@ -10,15 +10,15 @@ let escodegen = require('escodegen')
 let util = {}
 
 util.log = function (msg){
-    console.log(`[${util.logTime()}]${msg}`)
+    console.log(`${util.logTime()} ${msg}`)
 }
 util.error = function (msg){
-    console.log(colors.red(`[${util.logTime()}]${msg}`))
+    console.log(util.logTime(), colors.red(`${msg}`))
 }
 
 util.logTime = function (){
     let now = new Date
-    return `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+    return colors.magenta(`${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`)
 }
 
 //深度遍历文件夹

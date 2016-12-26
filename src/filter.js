@@ -25,7 +25,7 @@ function filterFile(f){
     // 如果大于200k，报警
     let fsize = (util.getFileSize(f)/1024).toFixed(2)
     if (fsize > 200){
-        util.error(`[${rf}], 文件尺寸为${fsize}k, 大于200k，请注意!`)
+        util.error(`[filter]: ${rf}, 文件尺寸为${fsize}k, 大于200k，请注意!`)
     }
 
     util.log(`[filter]: ${rf}`)
