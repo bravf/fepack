@@ -37,7 +37,7 @@ function scanF(f){
             df = `${df}.jade`
         }
 
-        insertDepTable(path.relative(tmpDir.a, f), f)
+        insertDepTable(path.relative(tmpDir.a, df), f)
         dfs.push(df)
     }
 
