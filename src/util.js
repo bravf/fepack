@@ -211,7 +211,13 @@ util.getType = function (obj){
 
 // 得到js require依赖 (by ast)
 util.getRequireDepsByAst = function (code){
-    let ast = util.getType(code) == 'Object' ? code : esprima.parse(code)
+    let ast = {}
+    
+    try{
+        util.getType(code) == 'Object' ? code : esprima.parse(code)
+    }
+    catch(ex){}
+    
     let requires = {}
 
     function walk(obj){
