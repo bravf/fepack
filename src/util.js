@@ -214,7 +214,7 @@ util.getRequireDepsByAst = function (code){
     let ast = {}
     
     try{
-        util.getType(code) == 'Object' ? code : esprima.parse(code)
+        ast = util.getType(code) == 'Object' ? code : esprima.parse(code)
     }
     catch(ex){}
     
