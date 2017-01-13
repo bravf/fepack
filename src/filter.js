@@ -44,7 +44,7 @@ function filterFile(f){
     let extname = path.extname(f)
     let toDir
 
-    if (util.isext(f, '.ts,.scss,.md,.jade,.js,.jsx')){
+    if (util.isext(f, '.ts,.scss,.md,.jade,.js,.jsx,.coffee')){
         toDir = tmpDir.a
     }
     else {

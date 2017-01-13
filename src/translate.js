@@ -12,6 +12,7 @@ let tmpDir = g_conf.tmpDir
 let releaseConf = g_conf.fepackJSON.release
 
 let isWatch = g_conf.case.watch
+let isCoffee = !!releaseConf.coffee
 
 //* typescript 转换
 function transts(){
@@ -133,6 +134,54 @@ function mdWatch(){
     })
 }
 
+//# coffee 转换
+function coffeec(f){
+    if (!fs.existsSync(f) || !util.isext(f, '.coffee')){
+        return
+    }
+
+    let rf = path.relative(tmpDir.a, f)
+    util.log(`[translate]: ${rf}`)
+
+    let defer = Promise.defer()
+    let coffeecProcess = exec(`coffee -o ../b/${path.dirname(rf)} -cb ${rf}`)
+
+    coffeecProcess.stdout.on('data', msg=>{
+        util.log(msg)
+    })
+    coffeecProcess.stdout.on('end', msg=>{
+        defer.resolve()
+    })
+    coffeecProcess.stderr.on('data', msg=>{
+        util.error(msg)
+    })
+
+    return defer.promise
+}
+
+function transCoffee(){
+    if (!isCoffee){
+        return Promise.resolve()
+    }
+
+    let defers = []
+    util.walk(tmpDir.a, f => {
+        defers.push(coffeec(f))
+    })
+
+    return Promise.all(defers)
+}
+
+function coffeeWatch(){
+    if (!isCoffee){
+        return false
+    }
+
+    fs.watch(tmpDir.a, {recursive:true}, (e,f)=>{
+        coffeec(path.join(tmpDir.a, f))
+    })
+}
+
 //* 整体转换
 function translate(){
     process.chdir(tmpDir.a)
@@ -140,7 +189,10 @@ function translate(){
     transJade.translate()
     transmd()
 
-    return transts().then(_=>{
+    return transts()
+    .then(_=>{
+        return transCoffee()
+    }).then(_=>{
         return transsass()
     })
 }
@@ -148,6 +200,7 @@ function watch(){
     transJade.watch()
     mdWatch()
     sassWatch()
+    coffeeWatch()
 }
 
 exports.translate = translate

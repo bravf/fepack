@@ -79,6 +79,9 @@ let cookie = require('cookie')
         //域名，会加到被引用的资源前
         "domain": "",
 
+        //是否开启coffee编译
+        "coffee": "false", //默认不开启（如果开启，需要提前全局安装coffeescript, npm install -g coffee-script）
+
         //编译实例
         "cases": {
             "dev": {

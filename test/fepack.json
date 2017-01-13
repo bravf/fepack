@@ -6,6 +6,8 @@
         "project": "fepack-test",
         "domain": "//s1.mljr.com",
 
+        "coffee": true,
+
         "cases" : {
             "dev": {
                 "optimize": true,
