@@ -28,7 +28,7 @@ fepack server start
 ##支持功能
 1. 语法增强，支持
     ```
-    (typescript,es6) => es5
+    (typescript,es6,coffee) => es5
     sass => css
     (jade,md) => html
     jsx => js
