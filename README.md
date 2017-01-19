@@ -34,7 +34,7 @@ fepack server start
     jsx => js
     ```
 
-2. 静态资源加版本号（支持.html inline模式 <script src="a.js" inline></script>, <link href="a.css" inline>）
+2. 静态资源加版本号（支持.html inline模式 `<script src="a.js" inline></script>, <link href="a.css" inline>`）
 3. 文件压缩
 4. 源文件常量注入
 5. 文件大小检测，主要是图片文件，默认大于200k报警

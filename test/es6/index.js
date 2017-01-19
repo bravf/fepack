@@ -6,7 +6,7 @@ console.log('@{FEDOG.bb}')
 console.log('@{FEPACK.a}')
 console.log('@{FEPACK.aa}')
 
-console.log(1)
+console.log(123)
 
 console.log(require('cookie').parse('foo=bar; equation=E%3Dmc%5E2'))
 
