@@ -28,6 +28,10 @@ function insertDepTable(childF, mainF){
 }
 
 function scanF(f){
+    if (!fs.existsSync(f)){
+        return
+    }
+
     let body = util.getBody(f)
 
     let dfs = [], v
@@ -55,7 +59,15 @@ function transJade(f){
         return
     }
 
-    let body = jade.compileFile(f, {pretty:true})({FEDOG:g_conf.case.env, FEPACK:g_conf.case.env})
+    let body = 'body'
+
+    try{
+        body = jade.compileFile(f, {pretty:true})({FEDOG:g_conf.case.env, FEPACK:g_conf.case.env})
+    }
+    catch(ex){
+        util.error(ex)
+    }
+
     let rf = path.relative(tmpDir.a, f)
     let f2
 
@@ -86,16 +98,6 @@ function watch(){
         }
 
         let f = path.join(tmpDir.a, rf)
-        // if (util.underline(f)){
-        //     if (rf in depTable){
-        //         depTable[rf].forEach(_=>{
-        //             transJade(_)
-        //         })
-        //     }
-        // }
-        // else {
-        //     transJade(f)
-        // }
 
         // 不再检测下划线开头的私有文件，因为可能在编译的下阶段被js引用
         if (rf in depTable){
