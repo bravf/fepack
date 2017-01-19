@@ -1,5 +1,6 @@
 let path = require('path')
 let fs = require('fs')
+
 let util = require('./util')
 
 let g_conf = global.g_conf
@@ -84,6 +85,15 @@ function vf(f, a, b){
 
     if (bf !== false){
         idtable(bf, f)
+
+        //如果script inline
+        if (/<script.*?inline.*?>/i.test(a)){
+            return `<script>${util.getBody(bf)}</script>`
+        }
+        //如果css inline
+        if (/<link.*?inline.*?>/i.test(a)){
+            return `<style type="text/css">${util.getBody(bf)}</style>`
+        }
 
         let bo = path.parse(bf)
 
