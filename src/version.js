@@ -16,7 +16,7 @@ let vtable = {}
 //依赖表
 let dtable = {}
 //script|css|img
-let reg1 = /(?:<script.*?src="(.*?)".*?><\/script>)|(?:<link.*?href="(.*?)".*?>)|(?:<img.*?src="(.*?)".*?>)/gi
+let reg1 = /(?:<script.*?src="(.*?)".*?>\s*<\/script>)|(?:<link.*?href="(.*?)".*?>)|(?:<img.*?src="(.*?)".*?>)/gi
 //url()
 let reg2 = /url\(['"]?(?!http:\/\/)([^)'"]+)/gi
 //img
