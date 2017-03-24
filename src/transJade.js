@@ -59,7 +59,7 @@ function transJade(f){
         return
     }
 
-    let body = 'body'
+    let body = ''
 
     try{
         body = jade.compileFile(f, {pretty:true, doctype:'html'})({FEDOG:g_conf.case.env, FEPACK:g_conf.case.env})
