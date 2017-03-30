@@ -88,11 +88,11 @@ function vf(f, a, b){
 
         //如果script inline
         if (/<script.*?inline.*?>/i.test(a)){
-            return `<script>${util.getBody(bf)}</script>`
+            return `<script>${v2(bf)}</script>`
         }
         //如果css inline
         if (/<link.*?inline.*?>/i.test(a)){
-            return `<style type="text/css">${util.getBody(bf)}</style>`
+            return `<style type="text/css">${v2(bf)}</style>`
         }
 
         let bo = path.parse(bf)
@@ -151,6 +151,7 @@ function v2(f){
     }
 
     util.createF(path.join(path.dirname(f2), `${fo.name}${v}${fo.ext}`), body)
+    return body
 }
 //处理html文件
 function v3(f){
