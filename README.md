@@ -13,7 +13,7 @@ gem install compass
 npm install -g fepack
 ```
 
-##例子
+## 例子
 ```
 mkdir my-proj
 cd my-proj
@@ -25,7 +25,7 @@ fepack server start
 在浏览器中打开127.0.0.1:8080
 ```
 
-##支持功能
+## 支持功能
 1. 语法增强，支持
     ```
     (typescript,es6,coffee) => es5
@@ -41,8 +41,8 @@ fepack server start
 6. 增加velocity模板语法支持，[用法](https://github.com/bravf/fepack/tree/master/test/vm)
 
 
-##模块加载
-###fepack支持browserify式的模块加载
+## 模块加载
+### fepack支持browserify式的模块加载
 ```js
 // require业务js文件
 let head = require('./head.js')
@@ -63,7 +63,7 @@ let cssModule = require('./index.css')
 let cookie = require('cookie')
 ```
 
-##fepack.json
+## fepack.json
 ```js
 {
     "server": {
