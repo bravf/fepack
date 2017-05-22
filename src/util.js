@@ -6,6 +6,7 @@ let minimatch = require("minimatch")
 let colors = require('colors')
 let esprima = require('esprima')
 let escodegen = require('escodegen')
+let chokidar = require('chokidar')
 
 let util = {}
 
@@ -259,6 +260,25 @@ util.getRequireDepsByAst = function (code){
     } 
 }
 
+//watch
+util.watch = function (p, c){
+    
+    // fs.watch(p, {recursive:true}, (e, f)=>{
+    //     c(e, f)
+    // })
 
+    let t = +new Date
+
+    chokidar.watch(p, {
+        ignored: /\.git|\.listen_test/,
+    })
+    .on('all', (e, f) => {
+        //如果文件更改于watch之前，则忽略此次事件
+        if (+fs.statSync(f).mtime <= t){
+            return
+        }
+        c(e, path.relative(p, f))
+    })
+}
 
 module.exports = util

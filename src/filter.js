@@ -79,7 +79,7 @@ function filter(){
 }
 
 function watch(){
-    fs.watch(g_conf.root, {recursive:true}, (e, f) => {
+    util.watch(g_conf.root, (e, f) => {
         filterFile(path.join(g_conf.root, f))
     })
 }

@@ -177,7 +177,7 @@ function jsRequire(){
 }
 
 function watch(){
-    fs.watch(tmpDir.b, {recursive:true}, (e, rf) => {
+    util.watch(tmpDir.b, (e, rf) => {
         let f = path.join(tmpDir.b, rf)
 
         if (util.isext(f, '.js,.tpl,.jade,.html,.css')){

@@ -130,7 +130,7 @@ function transmd(){
 }
 
 function mdWatch(){
-    fs.watch(tmpDir.a, {recursive:true}, (e, f)=>{
+    util.watch(tmpDir.a, (e, f)=>{
         mdc(path.join(tmpDir.a, f))
     })
 }
@@ -178,7 +178,7 @@ function coffeeWatch(){
         return false
     }
 
-    fs.watch(tmpDir.a, {recursive:true}, (e,f)=>{
+    util.watch(tmpDir.a, (e,f)=>{
         coffeec(path.join(tmpDir.a, f))
     })
 }

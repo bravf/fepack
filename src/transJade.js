@@ -92,7 +92,7 @@ function translate(){
 }
 
 function watch(){
-    fs.watch(tmpDir.a, {recursive:true}, (e, rf)=>{
+    util.watch(tmpDir.a, (e, rf)=>{
         if (!isJade(rf)){
             return false
         }

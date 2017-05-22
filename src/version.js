@@ -225,7 +225,7 @@ function version(){
 }
 
 function watch(){
-    fs.watch(fromDir, {recursive:true}, (event, f)=>{
+    util.watch(fromDir, (event, f)=>{
         f = path.join(fromDir, f)
 
         if (!fs.existsSync(f) || util.isDir(f)){

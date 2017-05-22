@@ -52,7 +52,7 @@ function optimize(){
 }
 
 function watch(){
-    fs.watch(tmpDir.c, {recursive:true}, (e,f)=>{
+    util.watch(tmpDir.c, (e,f)=>{
         optimizeFile(path.join(tmpDir.c, f))
     })
 }

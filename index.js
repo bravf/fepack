@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('2.2.5')
+        .version('2.2.8')
         .option('init', 'create fepack.json', _=>{
             createConfig()
         })

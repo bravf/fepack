@@ -1,6 +1,6 @@
 {
   "name": "fepack",
-  "version": "2.2.5",
+  "version": "2.2.8",
   "description": "a easy web tool",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
   "dependencies": {
     "autoprefixer": "^6.5.4",
     "browser-resolve": "^1.11.2",
+    "chokidar": "^1.7.0",
     "clean-css": "^3.4.19",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
