@@ -56,6 +56,11 @@ function filterFile(f){
         rf = rf.replace('.jsx', '.tsx')
     }
 
+    // 如果是图片则放一份到a，给compass用
+    if (util.isext(rf, '.png,.jpg,.gif')){
+        util.copy(f, path.join(tmpDir.a, rf))
+    }
+
     return util.copy(f, path.join(toDir, rf))
 }
 
