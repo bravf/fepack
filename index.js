@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('2.2.8')
+        .version('2.2.9')
         .option('init', 'create fepack.json', _=>{
             createConfig()
         })
@@ -210,6 +210,11 @@ function factory(){
         })
         .catch(msg => {
             console.error(msg)
+        })
+        .then(_ => {
+            if (!gCase.watch){
+                process.exit(1)
+            }
         })
 }
 
