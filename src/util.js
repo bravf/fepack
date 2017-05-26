@@ -270,7 +270,7 @@ util.watch = function (p, c){
     let t = +new Date
 
     chokidar.watch(p, {
-        ignored: /\.git|\.listen_test/,
+        ignored: /\.git|\.listen_test|\.sass-cache/,
     })
     .on('all', (e, f) => {
         //如果文件更改于watch之前，则忽略此次事件
