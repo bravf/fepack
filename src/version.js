@@ -36,24 +36,32 @@ function idtable(a, b){
 
 //f1当前文件，f2引用文件
 function gPath(f1, f2){
-    let f3
+    let f3 = {
+        path: null,
+        content: null
+    }
 
     if (f2.slice(0,4) == 'http'){
         return false
     }
 
     if (f2[0] == '/'){
-        f3 = path.join(fromDir, f2)
+        f3.path = path.join(fromDir, f2)
     }
     else {
-        f3 = path.join(path.dirname(f1), f2)
+        f3.path = path.join(path.dirname(f1), f2)
     }
 
     //如果不在d中
-    if (!fs.existsSync(f3)){
+    if (!fs.existsSync(f3.path)){
         //检查是否在www中
-        if (!fs.existsSync(path.join(g_conf.case.www, releaseConf.project, f2))){
-            return false
+        let f4 = path.join(g_conf.case.www, releaseConf.project, f2)
+
+        if (!fs.existsSync(f4)){
+            f3.path = null
+        }
+        else {
+            f3.content = util.getBody(f4)
         }
     }
 
@@ -81,18 +89,19 @@ function v(t){
 
 //替换引用辅助函数
 function vf(f, a, b){
-    let bf = gPath(f, b)
+    let pathObj = gPath(f, b)
+    let bf = pathObj.path
 
-    if (bf !== false){
+    if (bf !== null){
         idtable(bf, f)
 
         //如果script inline
         if (/<script.*?inline.*?>/i.test(a)){
-            return `<script>${v2(bf)}</script>`
+            return `<script>${pathObj.content || v2(bf)}</script>`
         }
         //如果css inline
         if (/<link.*?inline.*?>/i.test(a)){
-            return `<style type="text/css">${v2(bf)}</style>`
+            return `<style type="text/css">${pathObj.content || v2(bf)}</style>`
         }
 
         let bo = path.parse(bf)
