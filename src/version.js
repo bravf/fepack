@@ -42,7 +42,7 @@ function gPath(f1, f2){
     }
 
     if (f2.slice(0,4) == 'http'){
-        return false
+        return f3
     }
 
     if (f2[0] == '/'){
