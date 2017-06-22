@@ -123,8 +123,13 @@ function createBundleJs(f, requireFiles){
     })
     bodys.push(getBody(f))
 
+    //处理环境变量
     let bundleJs = util.replaceEnv(g_conf.case.env, bodys.join('\n'))
 
+    //toAscii
+    bundleJs = util.toAscii(bundleJs)
+
+    //保存到c
     util.createF(path.join(tmpDir.c, path.relative(tmpDir.b, f)), bundleJs)
 }
 
