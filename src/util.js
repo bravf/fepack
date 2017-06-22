@@ -285,7 +285,7 @@ util.watch = function (p, c){
 util.toAscii = function (str){
      return str.replace(/[\u0080-\uffff]/g, function (ch) {
         var code = ch.charCodeAt(0).toString(16)
-        if (code.length <= 2 && !identifier) {
+        if (code.length <= 2) {
             while (code.length < 2) code = "0" + code
             return "\\x" + code
         } else {
