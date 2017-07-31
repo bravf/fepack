@@ -40,9 +40,9 @@ function transts(){
 
     let tscProcess = exec('tsc -w')
     tscProcess.stdout.on('data', msg=>{
-        defer.resolve()
+        
         if (msg.indexOf('Watching for file changes') != -1){
-
+            defer.resolve()
             if (!isWatch){
                 tscProcess.kill()
             }
@@ -50,6 +50,7 @@ function transts(){
         }
         if (msg.indexOf('error') != -1){
             util.error(msg)
+            defer.reject()
             return
         }
 
