@@ -76,6 +76,7 @@ http_path = "/"
 css_dir = "../b"
 sass_dir = ""
 images_dir = ""
+line_comments = false
 `
     )
 
