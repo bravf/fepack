@@ -13,7 +13,19 @@
                 "optimize": false,
                 "version": true,
                 "watch": true,
-                "domain": false,
+                "domain": true,
+                "env": {
+                    "aa": "aaaa",
+                    "bb": "bbbb",
+                    "a": "cc"
+                }
+            },
+            "dev2": {
+                "optimize": false,
+                "version": true,
+                "watch": true,
+                "domain": true,
+                "reDomain": "//s2.mljr.com",
                 "env": {
                     "aa": "aaaa",
                     "bb": "bbbb",

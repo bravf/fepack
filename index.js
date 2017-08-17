@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('2.3.9')
+        .version('2.4.0')
         .option('init', 'create fepack.json', _=>{
             createConfig()
         })
@@ -137,12 +137,17 @@ function initConfig(){
         version: false,
         watch: false,
         domain: false,
+        reDomain: '',
         www: path.join(process.env.HOME, '.fepack-tmp/www'),
         env: {}
     }, g_conf.fepackJSON.release.cases[program.releaseCase] || {})
 
     if (g_conf.case.www[0] != '/'){
         g_conf.case.www = path.join(root, g_conf.case.www)
+    }
+
+    if (g_conf.case.reDomain){
+        g_conf.fepackJSON.release.domain = g_conf.case.reDomain
     }
 
     //在环境变量中增加html版本号

@@ -77,7 +77,7 @@ let cookie = require('cookie')
         "project": "",  
 
         //域名，会加到被引用的资源前
-        "domain": "",
+        "domain": "//s1.mljr.com",
 
         //是否开启coffee编译
         "coffee": "false", //默认不开启（如果开启，需要提前全局安装coffeescript, npm install -g coffee-script）
@@ -109,7 +109,10 @@ let cookie = require('cookie')
                 "watch": false,
 
                 //是否启用域名，默认false  
-                "domain": true,    
+                "domain": true,
+
+                //覆盖全局的domain
+                "reDomain": "//s2.mljr.com",
 
                  //指定编译结果目录，
                  //默认为/Users/${user}/.fedog-tmp/www
