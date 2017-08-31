@@ -23,7 +23,8 @@ function optimizeFile(f){
         util.log(`[optimize]: ${rf}`)
         util.createF(
             f2,
-            UglifyJS.minify(util.getBody(f), {fromString:true}).code
+            // util.toAscii(UglifyJS.minify(util.getBody(f), {fromString:true, 'ascii_only':true}).code)
+            UglifyJS.minify(util.getBody(f), {fromString:true, output:{'ascii_only':true}}).code
         )
     }
     else if (util.isext(f, '.css')){
