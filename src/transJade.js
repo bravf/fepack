@@ -12,6 +12,14 @@ let releaseConf = g_conf.fepackJSON.release
 
 let isWatch = g_conf.case.watch
 
+// 增加jadeData支持
+let injectJadeData = !!g_conf.case.jadeData
+let injectJadeDataDir = path.join(tmpDir.a, g_conf.case.jadeDataDir)
+if (injectJadeData && !fs.existsSync(injectJadeDataDir)) {
+    injectJadeData = false
+    util.error('jade data dir not exists! dir is :' + g_conf.case.jadeDataDir)
+}
+
 //* 依赖表
 let depTable = {}
 let reg = /(?:include|extends)\s+(.*?)\s*$/gm
@@ -60,16 +68,48 @@ function transJade(f){
     }
 
     let body = ''
+    let rf = path.relative(tmpDir.a, f)
+    let f2
 
     try{
-        body = jade.compileFile(f, {pretty:true, doctype:'html'})({FEDOG:g_conf.case.env, FEPACK:g_conf.case.env})
+        // 增加jadeData支持
+        let data = {
+            FEDOG: g_conf.case.env,
+            FEPACK: g_conf.case.env
+        }
+
+        if (
+            injectJadeData
+            // 只考虑page下文件
+            && rf.startsWith('page' + path.sep)
+        ) {
+           let dataFile = path.join(
+                injectJadeDataDir,
+                path.relative('page' + path.sep, path.dirname(rf)),
+                path.basename(rf, '.jade') + '.js'
+            )
+
+            // 数据文件是否存在
+            if (fs.existsSync(dataFile)) {
+                delete require.cache[dataFile]
+                jadeData = require(dataFile)
+
+                try {
+                    data = deepAssign(jadeData, data)
+
+                    insertDepTable(path.relative(tmpDir.a, dataFile), f)
+                }
+                catch(ex) {
+                    util.error(ex)
+                }
+            }
+        }
+
+        body = jade.compileFile(f, {pretty:true, doctype:'html'})(data)
     }
     catch(ex){
         util.error(ex)
     }
-
-    let rf = path.relative(tmpDir.a, f)
-    let f2
 
     util.log(`[translate]: ${rf}`)
 
@@ -93,7 +133,8 @@ function translate(){
 
 function watch(){
     util.watch(tmpDir.a, (e, rf)=>{
-        if (!isJade(rf)){
+        // if (!isJade(rf)){
+        if (!util.isext(rf, '.jade,.js')){
             return false
         }
 

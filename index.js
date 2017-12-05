@@ -139,7 +139,9 @@ function initConfig(){
         domain: false,
         reDomain: '',
         www: path.join(process.env.HOME, '.fepack-tmp/www'),
-        env: {}
+        env: {},
+        jadeData: false,
+        jadeDataDir: '_jadeData'
     }, g_conf.fepackJSON.release.cases[program.releaseCase] || {})
 
     if (g_conf.case.www[0] != '/'){
