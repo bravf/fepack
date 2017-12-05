@@ -13,12 +13,7 @@ let releaseConf = g_conf.fepackJSON.release
 let isWatch = g_conf.case.watch
 
 // 增加jadeData支持
-let injectJadeData = !!g_conf.case.jadeData
 let injectJadeDataDir = path.join(tmpDir.a, g_conf.case.jadeDataDir)
-if (injectJadeData && !fs.existsSync(injectJadeDataDir)) {
-    injectJadeData = false
-    util.error('jade data dir not exists! dir is :' + g_conf.case.jadeDataDir)
-}
 
 //* 依赖表
 let depTable = {}
@@ -79,9 +74,8 @@ function transJade(f){
         }
 
         if (
-            injectJadeData
             // 只考虑page下文件
-            && rf.startsWith('page' + path.sep)
+            rf.startsWith('page' + path.sep)
         ) {
            let dataFile = path.join(
                 injectJadeDataDir,
