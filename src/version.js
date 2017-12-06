@@ -16,7 +16,7 @@ let vtable = {}
 //依赖表
 let dtable = {}
 //script|css|img
-let reg1 = /(?:<script.*?src="(.*?)".*?>\s*<\/script>)|(?:<link.*?href="(.*?)".*?>)|(?:<img.*?src="(.*?)".*?>)/gi
+let reg1 = /(?:<script.*?src="(.*?)".*?>\s*<\/script>)|(?:<link.*?href="(.*?)".*?>)|(?:<img.*?src="(.*?)".*?>)|(?:script\(.*?src="(.*?)".*?\))|(?:link\(.*?href="(.*?)".*?\))|(?:img\(.*?src="(.*?)".*?\))/gi
 //url()
 let reg2 = /url\(['"]?(?!http:\/\/)([^)'"]+)/gi
 //img
@@ -104,6 +104,18 @@ function vf(f, a, b){
             return `<style type="text/css">${pathObj.content || v2(bf)}</style>`
         }
 
+        // jade script|css
+        if (/^(script|link)\(.*?inline/i.test(a)) {
+            var content = pathObj.content || v2(bf),
+                tag = a.split('(')[0]
+
+            if (tag == 'link') {
+                tag = 'style'
+            }
+
+            return `${tag} ${content}`
+        }
+
         let bo = path.parse(bf)
 
         let domain = gCase.domain ? releaseConf.domain : ''
@@ -170,8 +182,8 @@ function v3(f){
     let rf = path.relative(fromDir, f)
     let f2 = path.join(toDir, rf)
 
-    let body = util.getBody(f).replace(reg1, (a, b, c, d) => {
-        b = b || c || d
+    let body = util.getBody(f).replace(reg1, (a, ...args) => {
+        b = args.filter(v => !!v)[0]
         if (b){
             return vf(f, a, b)
         }
@@ -190,7 +202,7 @@ function v3(f){
 }
 
 function isHtml(ext){
-    return ['.html', '.vm'].indexOf(ext) != -1
+    return ['.html', '.vm', '.jade'].indexOf(ext) != -1
 }
 
 function iftable(f, ftable){

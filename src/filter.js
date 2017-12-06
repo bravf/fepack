@@ -51,6 +51,11 @@ function filterFile(f){
         toDir = tmpDir.b
     }
 
+    if (!!g_conf.case.jadeKeep && (extname == '.jade') && rf.startsWith('page' + path.sep)) {
+        // 保留page下jade文件
+        toDir = tmpDir.b
+    }
+
     // 如果是jsx文件，改成tsx后缀，方便tsc识别
     if (util.isext(rf, '.jsx')){
         rf = rf.replace('.jsx', '.tsx')

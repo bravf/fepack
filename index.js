@@ -139,7 +139,9 @@ function initConfig(){
         domain: false,
         reDomain: '',
         www: path.join(process.env.HOME, '.fepack-tmp/www'),
-        env: {}
+        env: {},
+        jadeDataDir: '_jadeData',
+        jadeKeep: false
     }, g_conf.fepackJSON.release.cases[program.releaseCase] || {})
 
     if (g_conf.case.www[0] != '/'){
@@ -152,6 +154,11 @@ function initConfig(){
 
     //在环境变量中增加html版本号
     g_conf.case.env['htmlVersion'] = g_conf.case.htmlVersion ? +new Date : ''
+
+    // jadeKeep 如果开启强制开启 optimize
+    if (g_conf.case.jadeKeep && !g_conf.case.optimize) {
+        g_conf.case.optimize = true
+    }
 
     //* 设置cmd title
     process.stdout.write(`${String.fromCharCode(27)}]0;FEPACK [${g_conf.fepackJSON.release.project}]${String.fromCharCode(7)}`)
