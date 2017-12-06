@@ -275,7 +275,7 @@ util.watch = function (p, c){
     .on('all', (e, f) => {
         // 如果文件被删除，则忽略
         if (!fs.existsSync(f)){
-            util.error('[translate]:' + f + ' 已经被删除!')
+            util.error('[translate]:' + f + ' 已经被移除!')
             return
         }
 
