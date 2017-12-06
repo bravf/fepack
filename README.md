@@ -39,7 +39,7 @@ fepack server start
 4. 源文件常量注入
 5. 文件大小检测，主要是图片文件，默认大于200k报警
 6. 增加velocity模板语法支持，[用法](https://github.com/bravf/fepack/tree/master/test/vm)
-7. 支持jade文件mock，默认会去根目录mock目录下查找路径相同的js文件，比如 mock/index.data.js
+7. 支持jade文件mock，默认会去根目录mock目录下查找路径相同的js文件，比如 mock/index.data.js
 
 
 ## 模块加载
