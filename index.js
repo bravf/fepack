@@ -217,7 +217,7 @@ function factory(){
             if (msg){
                 console.error('Error', msg)
             }
-            process.exit(1)
+            // process.exit(1)
         })
         .then(_ => {
             if (!gCase.watch){
