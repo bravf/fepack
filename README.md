@@ -39,6 +39,7 @@ fepack server start
 4. 源文件常量注入
 5. 文件大小检测，主要是图片文件，默认大于200k报警
 6. 增加velocity模板语法支持，[用法](https://github.com/bravf/fepack/tree/master/test/vm)
+7. 支持jade文件mock，默认会去根目录mock目录下查找路径相同的js文件，比如 mock/index.data.js
 
 
 ## 模块加载
@@ -116,7 +117,10 @@ let cookie = require('cookie')
 
                  //指定编译结果目录，
                  //默认为/Users/${user}/.fedog-tmp/www
-                "www": "../www"  
+                "www": "../www",
+                
+                //如果指定为ture，则保留page目录下的jade文件不编译，主要用来发布时server端使用，并且会强制开启optimize
+                "jadeKeep" : false
             }
         },
 

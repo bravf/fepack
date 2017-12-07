@@ -273,7 +273,13 @@ util.watch = function (p, c){
         ignored: /\.git|\.listen_test|\.sass-cache/,
     })
     .on('all', (e, f) => {
-        //如果文件更改于watch之前，则忽略此次事件
+        // 如果文件被删除，则忽略
+        if (!fs.existsSync(f)){
+            util.error('[translate]:' + f + ' 已经被移除!')
+            return
+        }
+
+        // 如果文件更改于watch之前，则忽略此次事件
         if (+fs.statSync(f).mtime <= t){
             return
         }

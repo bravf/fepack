@@ -140,7 +140,7 @@ function initConfig(){
         reDomain: '',
         www: path.join(process.env.HOME, '.fepack-tmp/www'),
         env: {},
-        jadeDataDir: '_jadeData',
+        jadeDataDir: 'mock',
         jadeKeep: false
     }, g_conf.fepackJSON.release.cases[program.releaseCase] || {})
 
@@ -224,7 +224,7 @@ function factory(){
             if (msg){
                 console.error('Error', msg)
             }
-            process.exit(1)
+            // process.exit(1)
         })
         .then(_ => {
             if (!gCase.watch){
