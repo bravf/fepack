@@ -30,6 +30,31 @@ function insertDepTable(childF, mainF){
     }
 }
 
+// mockjs require 解析依赖
+function insertDepTableByModule(m, rf) {
+    // m.id 当前文件
+    // m.children 引用的module
+    m.children.forEach(sub => {
+        insertDepTable(path.relative(tmpDir.a, sub.id), rf)
+
+        if (sub.children.length) {
+            insertDepTableByModule(sub, rf)
+        }
+    })
+}
+function clearCachedModule(moduleId) {
+    if (!require.cache[moduleId]) {
+        return
+    }
+
+    var m = require.cache[moduleId]
+    if (m.children && m.children.length) {
+        m.children.forEach(sub => clearCachedModule(sub.id))
+    }
+
+    delete require.cache[m.id]
+}
+
 function scanF(f){
     if (!fs.existsSync(f)){
         return
@@ -91,13 +116,17 @@ function transJade(f){
 
             // 数据文件是否存在
             if (fs.existsSync(dataFile)) {
-                delete require.cache[dataFile]
                 jadeData = require(dataFile)
 
                 try {
                     data = deepAssign(jadeData, data)
 
-                    insertDepTable(path.relative(tmpDir.a, dataFile), f)
+                    insertDepTableByModule(require.cache[dataFile], rf)
+                    insertDepTable(path.relative(tmpDir.a, dataFile), rf)
+
+                    // 清除require缓存
+                    // node目前不会将缓存的module加入children，也需要清理
+                    clearCachedModule(dataFile)
                 }
                 catch(ex) {
                     util.error(ex)
