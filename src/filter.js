@@ -16,6 +16,11 @@ function filterFile(f){
     }
 
     let rf = path.relative(g_conf.root, f)
+
+    // 忽略.git文件夹
+    if (rf.startsWith('.git')) {
+        return false
+    }
     
     if (!fs.existsSync(f) || util.isNodeModulePath(rf)){
         return
