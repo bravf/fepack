@@ -2,6 +2,8 @@ let path = require('path')
 let fs = require('fs')
 
 let util = require('./util')
+let UglifyJS = require("uglify-js")
+var CleanCSS = require('clean-css')
 
 let g_conf = global.g_conf
 let tmpDir = g_conf.tmpDir
@@ -109,8 +111,13 @@ function vf(f, a, b){
             var content = pathObj.content || v2(bf),
                 tag = a.split('(')[0]
 
+            // 如果 jade inline，则对内容压缩，避免缩进问题
             if (tag == 'link') {
                 tag = 'style'
+                content = (new CleanCSS()).minify(content).styles
+            }
+            else {
+                content = UglifyJS.minify(content, {fromString:true, output:{'ascii_only':true}}).code
             }
 
             return `${tag} ${content}`

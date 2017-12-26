@@ -156,9 +156,9 @@ function initConfig(){
     g_conf.case.env['htmlVersion'] = g_conf.case.htmlVersion ? +new Date : ''
 
     // jadeKeep 如果开启强制开启 optimize
-    if (g_conf.case.jadeKeep && !g_conf.case.optimize) {
-        g_conf.case.optimize = true
-    }
+    // if (g_conf.case.jadeKeep && !g_conf.case.optimize) {
+    //     g_conf.case.optimize = true
+    // }
 
     //* 设置cmd title
     process.stdout.write(`${String.fromCharCode(27)}]0;FEPACK [${g_conf.fepackJSON.release.project}]${String.fromCharCode(7)}`)

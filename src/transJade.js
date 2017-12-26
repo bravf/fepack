@@ -90,7 +90,7 @@ function transJade(f){
     let rf = path.relative(tmpDir.a, f)
 
     // 忽略 page/_*
-    if (rf.startsWith('page' + path.sep + '_')) {
+    if (rf.startsWith('page') && path.basename(rf)[0] == '_') {
         return
     }
 

@@ -14,6 +14,7 @@
                 "version": true,
                 "watch": true,
                 "domain": true,
+                "jadeKeep": true,
                 "env": {
                     "aa": "aaaa",
                     "bb": "bbbb",
