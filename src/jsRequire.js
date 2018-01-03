@@ -76,7 +76,7 @@ function getBody(f){
 
     // 如果tpl
     if (util.isext(f, '.tpl,.html')){
-        body2 = `${winFuncName} = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}'`
+        body2 = `${winFuncName} = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}';`
     }
     else if (util.isext(f, '.css')){
         body2 = `
