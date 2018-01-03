@@ -80,7 +80,7 @@ function getBody(f){
     }
     else if (util.isext(f, '.css')){
         body2 = `
-void function (){
++function (){
     var style = ${winFuncName} = document.createElement('style');
     style.type = 'text/css';
     style.innerHTML = '${body.replace(/\r?\n\s*/g, '').replace(/'/g, "\\'")}';
@@ -90,10 +90,10 @@ void function (){
     }
     else if (util.isext(f, '.js')){
         body2 = `
-void function (module, exports){
++function (){
     ${winFuncName} = {};
     ${body.replace(/(module\.)?exports/g, winFuncName).replace(/(^|\n)/g, '\n\t')};
-}({exports:{}}, {});
+}();
         `
         // 把所有require('xx')转换为window['xx']引用
         let requires = fileTable[f].requires
