@@ -13,7 +13,7 @@ let util = require('./src/util')
 
 function main(){
     program
-        .version('2.4.8')
+        .version('2.4.9')
         .option('init', 'create fepack.json', _=>{
             createConfig()
         })
@@ -165,11 +165,11 @@ function initConfig(){
 }
 
 function cleanTmpDir(){
-    let defer = Promise.defer()
-    exec(`rm -rf ${path.join(g_conf.root, g_conf.tmp)}`).stdout.on('end', _=>{
-        defer.resolve()
+    return new Promise((resolve, reject) => {
+        exec(`rm -rf ${path.join(g_conf.root, g_conf.tmp)}`).stdout.on('end', _=>{
+            resolve()
+        })
     })
-    return defer.promise
 }
 
 function createTmpDir(){

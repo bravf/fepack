@@ -216,7 +216,6 @@ let autoprefixer = require('autoprefixer')
 let pxtorem = require('postcss-pxtorem')
 
 function fePostcss(f, f2){
-    let defer = Promise.defer()
     let css = util.getBody(f)
     let items = []
 
@@ -228,12 +227,12 @@ function fePostcss(f, f2){
         items.push(pxtorem(postcssConf['pxtorem']))
     }
 
-    postcss(items).process(css).then(_=>{
-        util.createF(f2, _.css)
-        defer.resolve()
+    return new Promise((resolve, reject) => {
+        postcss(items).process(css).then(_=>{
+            util.createF(f2, _.css)
+            resolve()
+        })
     })
-
-    return defer.promise
 }
 
 exports.jsRequire = jsRequire

@@ -90,19 +90,17 @@ util.createF = function (f, body){
 
 //复制文件
 util.copy = function (f1, f2){
-    let defer = Promise.defer()
-
-    fs.copy(f1, f2, (err) => {
-        if (err){
-            console.log(err)
-            defer.reject()
-        }
-        else {
-            defer.resolve()
-        }
+    return new Promise((resolve, reject) => {
+        fs.copy(f1, f2, (err) => {
+            if (err){
+                console.log(err)
+                reject()
+            }
+            else {
+                resolve()
+            }
+        })
     })
-
-    return defer.promise
 }
 
 util.isDir = function (f){

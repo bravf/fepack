@@ -16,7 +16,6 @@ let isCoffee = !!releaseConf.coffee
 
 //* typescript 转换
 function transts(){
-    let defer = Promise.defer()
     let tsconf = path.join(tmpDir.a, 'tsconfig.json')
 
     util.createF(tsconf, `
@@ -39,34 +38,34 @@ function transts(){
 `)
 
     let tscProcess = exec('tsc -w')
-    tscProcess.stdout.on('data', msg=>{
+
+    return new Promise((resolve, reject) => {
+        tscProcess.stdout.on('data', msg=>{
         
-        if (msg.indexOf('Watching for file changes') != -1){
-            defer.resolve()
-            if (!isWatch){
-                tscProcess.kill()
+            if (msg.indexOf('Watching for file changes') != -1){
+                resolve()
+                if (!isWatch){
+                    tscProcess.kill()
+                }
+                return
             }
-            return
-        }
-        if (msg.indexOf('error') != -1){
+            if (msg.indexOf('error') != -1){
+                util.error(msg)
+                reject()
+                return
+            }
+    
+            util.log(msg)
+        })
+        tscProcess.stderr.on('data', msg=>{
+            resolve()
             util.error(msg)
-            defer.reject()
-            return
-        }
-
-        util.log(msg)
+        })
     })
-    tscProcess.stderr.on('data', msg=>{
-        defer.resolve()
-        util.error(msg)
-    })
-
-    return defer.promise
 }
 
 //* sass 转换
 function transsass(){
-    let defer = Promise.defer()
     let sassconf = path.join(tmpDir.a, 'config.rb')
 
     util.createF(sassconf, `
@@ -81,17 +80,19 @@ line_comments = false
     )
 
     let sassProcess = exec('compass compile')
+
     sassProcess.stdout.on('data', msg=>{
         util.log(msg)
-    })
-    sassProcess.stdout.on('end', msg=>{
-        defer.resolve()
     })
     sassProcess.stderr.on('data', msg=>{
         util.error(msg)
     })
 
-    return defer.promise
+    return new Promise((resolve, reject) => {
+        sassProcess.stdout.on('end', msg=>{
+            resolve()
+        })
+    })
 }
 
 function sassWatch(){
@@ -146,20 +147,20 @@ function coffeec(f){
     let rf = path.relative(tmpDir.a, f)
     util.log(`[translate]: ${rf}`)
 
-    let defer = Promise.defer()
     let coffeecProcess = exec(`coffee -o ../b/${path.dirname(rf)} -cb ${rf}`)
 
     coffeecProcess.stdout.on('data', msg=>{
         util.log(msg)
     })
-    coffeecProcess.stdout.on('end', msg=>{
-        defer.resolve()
-    })
     coffeecProcess.stderr.on('data', msg=>{
         util.error(msg)
     })
 
-    return defer.promise
+    return new Promise((resolve, reject) => {
+        coffeecProcess.stdout.on('end', msg=>{
+            resolve()
+        })
+    })
 }
 
 function transCoffee(){
