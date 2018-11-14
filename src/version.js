@@ -145,7 +145,7 @@ function v1(f){
 
     let v = ''
     if (gCase.version){
-        v = util.getMd5(util.getBody(f))
+        v = util.getMd5(util.getBody_2(f))
         vtable[f] = v
         v = `.${v}`
     }
@@ -173,7 +173,7 @@ function v2(f){
 
     let v = ''
     if (gCase.version){
-        v = util.getMd5(body)
+        v = util.getMd5(util.getBody_2(f))
         vtable[f] = v
         v = `.${v}`
     }

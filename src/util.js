@@ -45,6 +45,10 @@ util.getBody = function (f){
     return fs.readFileSync(f).toString()
 }
 
+util.getBody_2 = function (f){
+    return fs.readFileSync(f)
+}
+
 //得到文件大小
 util.getFileSize = function (f){
     return fs.statSync(f).size
